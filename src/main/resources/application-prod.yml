@@ -20,3 +20,9 @@ logging:
     org.hibernate.orm.jdbc.bind: INFO
     org.hibernate.orm.jdbc.extract: INFO
     org.springframework.transaction.interceptor: INFO
+custom:
+  tempDirPath: /gen/temp
+  site:
+    baseUrl: "https://www.s-code.io"
+  genFile:
+    dirPath: /gen
