@@ -1,4 +1,8 @@
 package com.ll.medium.domain.member.member.entity;
 
-public class Member {
+import com.ll.medium.global.jpa.baseEntity.BaseEntity;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Member extends BaseEntity {
 }
