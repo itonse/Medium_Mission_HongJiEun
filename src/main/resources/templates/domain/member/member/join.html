@@ -64,10 +64,7 @@
     <script>
         function validateUsername(input) {
             var warningText = document.getElementById('usernameWarning');
-            if (input.value.length >= 4 && input.value.length <= 12) {
-                warningText.textContent = '사용 가능한 아이디입니다.';
-                warningText.className = 'success-text';
-            } else if (input.value.length > 0) {
+            if (input.value.length > 0) {
                 warningText.textContent = '아이디는 4자 이상 12자 이하이어야 합니다.';
                 warningText.className = 'warning-text';
             } else {
