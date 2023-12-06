@@ -1,7 +1,11 @@
 package com.ll.medium.domain.member.member.repository;
 
+import com.ll.medium.domain.member.member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    boolean existsByUsername(String username);
 }

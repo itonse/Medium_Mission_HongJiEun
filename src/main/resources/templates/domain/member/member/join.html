@@ -26,8 +26,8 @@
             <label class="label">
                 <span class="label-text">아이디</span>
             </label>
-            <input type="text" name="username" placeholder="아이디를 입력해주세요." class="input input-bordered" onkeyup="validateUsername(this)">
-            <span class="warning-text" id="usernameWarning"></span>
+            <input type="text" name="username" placeholder="아이디를 입력해주세요." class="input input-bordered">
+            <span class="warning-text" th:if="${errorMsg != null}" th:text="${errorMsg}"></span>
         </div>
 
         <!-- 비밀번호 입력 필드 -->
@@ -64,11 +64,11 @@
     <script>
         function validateUsername(input) {
             var warningText = document.getElementById('usernameWarning');
-            if (input.value.length > 0) {
+            if (input.value.length >= 4 && input.value.length <= 12) {
+                warningText.textContent = '';
+            } else {
                 warningText.textContent = '아이디는 4자 이상 12자 이하이어야 합니다.';
                 warningText.className = 'warning-text';
-            } else {
-                warningText.textContent = '';
             }
         }
 

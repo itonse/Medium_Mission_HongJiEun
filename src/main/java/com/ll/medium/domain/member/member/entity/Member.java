@@ -1,6 +1,5 @@
 package com.ll.medium.domain.member.member.entity;
 
-import com.ll.medium.domain.member.member.dto.JoinForm;
 import com.ll.medium.global.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,13 +25,4 @@ public class Member extends BaseEntity {
     private String password;
     private String email;
     private boolean verified;
-
-    public static Member from(JoinForm form) {
-        return Member.builder()
-                .username(form.getUsername())
-                .password(form.getPassword())
-                .email(form.getEmail())
-                .verified(false)
-                .build();
-    }
 }
