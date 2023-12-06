@@ -58,6 +58,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3', 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+    // 엔티티 변경 이력 관리
+    implementation 'org.springframework.data:spring-data-envers'
+
     // TEST
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
