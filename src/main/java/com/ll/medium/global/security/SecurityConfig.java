@@ -12,23 +12,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests.requestMatchers("/**")
-                                .permitAll()
+                .authorizeRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/**")
+                        .permitAll()
                 )
-                .headers(
-                        headers ->
-                                headers.frameOptions(
-                                        frameOptions ->
-                                                frameOptions.sameOrigin()
-                                )
+                .headers(headers -> headers
+                        .frameOptions(
+                                frameOptions ->
+                                        frameOptions.sameOrigin()
+                        )
                 )
-                .csrf(
-                        csrf ->
-                                csrf.ignoringRequestMatchers(
-                                        "/h2-console/**", "/member/join"
-                                )
-                );
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/h2-console/**", "/member/join"
+                        ))
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/member/login")
+                        .defaultSuccessUrl("/"))
+        ;
 
         return http.build();
     }
