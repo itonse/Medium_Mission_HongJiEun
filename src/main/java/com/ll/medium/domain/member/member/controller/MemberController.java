@@ -39,7 +39,7 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
-    String showLogin() {
+    String login() {
         return "domain/member/member/login";
     }
 }
