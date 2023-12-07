@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
@@ -31,6 +32,10 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin    // 사용자 정의 로그인 페이지
                         .loginPage("/member/login")
                         .defaultSuccessUrl("/"))    // 로그인 성공 시 리다이렉트 경로
+                .logout(logout -> logout     // 사용자 정의 로그아웃
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                        .logoutSuccessUrl("/")     // 로그아웃 시 리다이렉트 경로
+                        .invalidateHttpSession(true))     // 로그아웃 시 사용자 세션 삭제
         ;
 
         return http.build();
