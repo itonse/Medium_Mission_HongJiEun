@@ -35,7 +35,7 @@
 </head>
 <body>
 <th:block layout:fragment="header"></th:block>
-
+<th:block th:replace="~{global/navbar :: navbarFragment}"></th:block>
 <th:block layout:fragment="content"></th:block>
 </body>
 </html>
