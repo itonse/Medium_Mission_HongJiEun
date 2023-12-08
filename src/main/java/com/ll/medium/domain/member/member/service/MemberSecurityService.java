@@ -27,8 +27,9 @@ public class MemberSecurityService implements UserDetailsService {
         if (memberOptional.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
-
         Member member = memberOptional.get();
+
+        // 권한 부여
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(username)) {
             authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
@@ -36,6 +37,6 @@ public class MemberSecurityService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
         }
 
-        return new User(member.getUsername(), member.getPassword(), authorities);
+        return new User(member.getUsername(), member.getPassword(), authorities);   // UserDetail 인터페이스 구현체
     }
 }
