@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @SuperBuilder
 @AuditOverride(forClass = BaseEntity.class)
-@AllArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PROTECTED)    // builer로만 객체 생성하도록 강제 (외부에서 무분별한 객체 생성 방지)
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 @ToString(callSuper = true)
