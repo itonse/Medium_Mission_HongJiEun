@@ -19,7 +19,7 @@ public class MemberService {
     @Transactional
     public RsData<?> join(JoinForm joinForm) {
         if (memberRepository.existsByUsername(joinForm.getUsername())) {
-            return RsData.of("F-1", "해당 아이디는 이미 사용중입니다.");
+            return RsData.of("400", "해당 아이디는 이미 사용중입니다.");
         }
 
         Member newMember = Member.builder()
@@ -31,6 +31,6 @@ public class MemberService {
 
         memberRepository.save(newMember);
 
-        return RsData.of("S-1");
+        return RsData.of("200");
     }
 }

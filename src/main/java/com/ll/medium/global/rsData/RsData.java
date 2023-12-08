@@ -7,11 +7,12 @@ import lombok.Getter;
 @Getter
 public class RsData<T> {
     private String resultCode;
+    private int statusCode;
     private String msg;
     private T data;
 
     public boolean isSuccess() {
-        return resultCode.startsWith("S-");
+        return getStatusCode() >= 200 && getStatusCode() < 400;
     }
 
     public boolean isFail() {
@@ -19,7 +20,9 @@ public class RsData<T> {
     }
 
     public static <T> RsData<T> of(String resultCode, String msg, T data) {
-        return new RsData<>(resultCode, msg, data);
+        int statusCode = Integer.parseInt(resultCode.split("-", 2)[0]);
+
+        return new RsData<>(resultCode, statusCode, msg, data);
     }
 
     public static <T> RsData<T> of(String resultCode, String msg) {

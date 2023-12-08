@@ -30,7 +30,7 @@ public class MemberController {
     @PostMapping("/join")    // 302 Found
     public String join(@Valid JoinForm joinForm, Model model) {
         RsData<?> joinRs = memberService.join(joinForm);
-        if (joinRs.getResultCode().equals("F-1")) {
+        if (joinRs.isFail()) {
             model.addAttribute("errorMsg", joinRs.getMsg());
             return "domain/member/member/join";
         }
