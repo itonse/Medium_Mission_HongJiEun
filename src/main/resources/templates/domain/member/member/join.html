@@ -1,33 +1,19 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <title>회원가입</title>
-    <style>
-        .warning-text {
-            color: red;
-            font-size: 0.8em;
-            margin-top: 5px;
-        }
-        .success-text {
-            color: green;
-            font-size: 0.8em;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
+<html layout:decorate="~{global/layout}">
 
-<div>
+<div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 회원가입</h1>
 
-    <form action="/member/join" class="flex flex-col gap-4" method="POST" onsubmit="submitJoinForm(this); return false;">
+    <form action="/member/join" class="flex flex-col gap-4" method="POST"
+          onsubmit="submitJoinForm(this); return false;">
         <!-- 아이디 입력 필드 -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text">아이디</span>
             </label>
-            <input type="text" name="username" placeholder="아이디를 입력해주세요." class="input input-bordered">
-            <span class="warning-text" th:if="${errorMsg != null}" th:text="${errorMsg}"></span>
+            <input type="text" name="username" placeholder="아이디를 입력해주세요."
+                   class="input input-bordered">
+            <span class="warning-text" th:if="${errorMsg != null}"
+                  th:text="${errorMsg}"></span>
         </div>
 
         <!-- 비밀번호 입력 필드 -->
@@ -35,7 +21,8 @@
             <label class="label">
                 <span class="label-text">비밀번호</span>
             </label>
-            <input type="password" name="password" placeholder="비밀번호를 입력해주세요." class="input input-bordered" onkeyup="validatePassword(this)">
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요."
+                   class="input input-bordered" onkeyup="validatePassword(this)">
             <span class="warning-text" id="passwordWarning"></span>
         </div>
 
@@ -44,7 +31,8 @@
             <label class="label">
                 <span class="label-text">비밀번호 확인</span>
             </label>
-            <input type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력해주세요." class="input input-bordered">
+            <input type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력해주세요."
+                   class="input input-bordered">
         </div>
 
         <!-- 이메일 입력 필드 -->
@@ -52,7 +40,8 @@
             <label class="label">
                 <span class="label-text">이메일</span>
             </label>
-            <input type="email" name="email" placeholder="이메일을 입력해주세요." class="input input-bordered">
+            <input type="email" name="email" placeholder="이메일을 입력해주세요."
+                   class="input input-bordered">
         </div>
 
         <!-- 회원가입 버튼 -->
@@ -62,16 +51,6 @@
     </form>
 
     <script>
-        function validateUsername(input) {
-            var warningText = document.getElementById('usernameWarning');
-            if (input.value.length >= 4 && input.value.length <= 12) {
-                warningText.textContent = '';
-            } else {
-                warningText.textContent = '아이디는 4자 이상 12자 이하이어야 합니다.';
-                warningText.className = 'warning-text';
-            }
-        }
-
         function validatePassword(input) {
             var warningText = document.getElementById('passwordWarning');
             if (input.value.length >= 8 && input.value.length <= 20) {
@@ -130,6 +109,4 @@
         }
     </script>
 </div>
-
-</body>
 </html>

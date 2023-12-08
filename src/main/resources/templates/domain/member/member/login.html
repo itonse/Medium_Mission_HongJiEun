@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <title>로그인</title>
-    <style>
-        .alert-danger {
-            color: red;
-        }
-    </style>
-</head>
-<body>
+<html layout:decorate="~{global/layout}">
 
-<div>
+<div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 로그인</h1>
 
     <form th:action="@{/member/login}" method="POST" onsubmit="submitLoginForm(this); return false;">
@@ -62,6 +52,4 @@
         }
     </script>
 </div>
-
-</body>
 </html>
