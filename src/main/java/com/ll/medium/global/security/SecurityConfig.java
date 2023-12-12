@@ -15,10 +15,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorizeRequests -> authorizeRequests   // 인증 요구 사항 설정
-                        .requestMatchers("/**")
-                        .permitAll()   // 모든 요청에 대해 접근 서용
-                )
                 .headers(headers -> headers
                         .frameOptions(
                                 frameOptions ->
@@ -31,7 +27,8 @@ public class SecurityConfig {
                         ))
                 .formLogin(formLogin -> formLogin    // 사용자 정의 로그인 페이지
                         .loginPage("/member/login")
-                        .defaultSuccessUrl("/"))    // 로그인 성공 시 리다이렉트 경로
+                        .defaultSuccessUrl("/")    // 로그인 성공 시 리다이렉트 경로
+                        .failureUrl("/member/login"))     // 로그인 하지 않은 사용자가 보호된 페이지에 접근하려 할 때 해당 경로로 리다이렉션
                 .logout(logout -> logout     // 사용자 정의 로그아웃
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")     // 로그아웃 시 리다이렉트 경로
