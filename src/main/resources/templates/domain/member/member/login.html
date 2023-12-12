@@ -4,6 +4,7 @@
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 로그인</h1>
 
     <form th:action="@{/member/login}" method="POST" onsubmit="submitLoginForm(this); return false;">
+        <!-- 입력한 정보로 등록 된 사용자가 없을 때 -->
         <div th:if="${param.error}">
             <div class="alert alert-danger">
                 사용자ID 또는 비밀번호를 확인해 주세요.
