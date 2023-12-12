@@ -28,8 +28,9 @@ public class PostControllerTest {
     private MockMvc mvc;
 
     @Test   // GET /member/write
-    @DisplayName("글 작성 폼")
-    void showWriteFoam() throws Exception {
+    @WithMockUser(username = "author1", roles = {"USER"})    // 테스트를 위해 가짜 유저를 등록해서 인증정보 설정
+    @DisplayName("글 작성 폼에 접근")
+    void showWriteForm() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(get("/post/write"))
@@ -47,7 +48,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "author1", roles = {"USER"})    // 테스트를 위해 가짜 유저를 등록해서 인증정보 설정
+    @WithMockUser(username = "author1", roles = {"USER"})
     @DisplayName("글 작성 성공")
     void successWrite() throws Exception {
         // WHEN
@@ -65,5 +66,6 @@ public class PostControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/post/list"));
     }
+
 }
 
