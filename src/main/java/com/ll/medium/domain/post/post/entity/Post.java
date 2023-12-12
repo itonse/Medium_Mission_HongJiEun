@@ -24,7 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Post extends BaseEntity {
     private String title;
     private String body;
-    private boolean isPublished;
+    private boolean published;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Member author;
