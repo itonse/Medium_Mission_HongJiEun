@@ -48,6 +48,22 @@ public class PostControllerTest {
     }
 
     @Test
+    @DisplayName("글 작성 폼에 접근 실패 - 로그인하지 않은 상태")
+    void failWriteForm() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/post/write"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(PostController.class))
+                .andExpect(handler().methodName("showWrite"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/member/login"));
+    }
+
+    @Test
     @WithMockUser(username = "author1", roles = {"USER"})
     @DisplayName("글 작성 성공")
     void successWrite() throws Exception {
