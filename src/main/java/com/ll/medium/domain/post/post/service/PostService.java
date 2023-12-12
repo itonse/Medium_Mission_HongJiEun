@@ -22,8 +22,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public List<Post> getPosts() {
-        return postRepository.findAll();
+    public List<Post> getPublishedPosts() {
+        return postRepository.findAll().stream()
+                .filter(Post::isPublished)
+                .toList();
     }
 
     @Transactional

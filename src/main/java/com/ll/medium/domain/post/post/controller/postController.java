@@ -1,6 +1,7 @@
 package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.dto.WriteForm;
+import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -21,7 +24,8 @@ public class postController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        model.addAttribute("posts", postService.getPosts());
+        List<Post> posts = postService.getPublishedPosts();
+        model.addAttribute("posts", posts);
         return "domain/post/post/list";
     }
 
