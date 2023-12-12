@@ -6,13 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,6 +44,26 @@ public class PostControllerTest {
                 .andExpect(content().string(containsString("""
                         글 작성
                         """.stripIndent().trim())));
+    }
+
+    @Test
+    @WithMockUser(username = "author1", roles = {"USER"})    // 테스트를 위해 가짜 유저를 등록해서 인증정보 설정
+    @DisplayName("글 작성 성공")
+    void successWrite() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/post/write")
+                        .with(csrf())
+                        .param("title", "제목1")
+                        .param("body", "내용1")
+                        .param("published", "true")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/post/list"));
     }
 }
 
