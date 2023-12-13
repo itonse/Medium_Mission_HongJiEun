@@ -43,7 +43,7 @@ public class PostService {
     }
 
     @Transactional
-    public void write(WriteForm writeForm, User user) {
+    public RsData<Object> write(WriteForm writeForm, User user) {
         Optional<Member> authorOptional = memberRepository.findByUsername(user.getUsername());
 
         authorOptional.ifPresent(author -> {
@@ -56,6 +56,8 @@ public class PostService {
 
             postRepository.save(post);
         });
+
+        return RsData.of("201", "글이 등록되었습니다.");
     }
 
     public RsData<PostDto> getPostDetail(Long id) {

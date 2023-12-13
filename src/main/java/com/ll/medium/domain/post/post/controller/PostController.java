@@ -40,8 +40,8 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm) {
-        postService.write(writeForm, rq.getUser());
-        return "redirect:/post/list";
+        RsData<Object> rsData = postService.write(writeForm, rq.getUser());
+        return rq.redirect("/post/list", rsData.getMsg());
     }
 
     @GetMapping("/{id}")
