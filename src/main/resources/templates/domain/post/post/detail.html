@@ -40,6 +40,15 @@
     </div>
 
     <div class="post-body" th:text="${postDto.body}"></div>
+
+    <div class="my-3" style="margin-top: 20px;">
+        <a th:href="@{|/post/${postDto.id}/modify|}"
+           sec:authorize="isAuthenticated()"
+           th:if="${postDto.author != null and #authentication.getPrincipal().getUsername() == postDto.author}"
+           style="text-decoration: none; color: black; border: 1px solid gray; padding: 5px 10px; font-size: 14px; border-radius: 5px;">
+            수정
+        </a>
+    </div>
 </div>
 
 </body>
