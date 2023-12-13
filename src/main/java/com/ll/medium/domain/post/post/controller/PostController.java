@@ -58,7 +58,7 @@ public class PostController {
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
-    public String showModify(@PathVariable("id") Long id) {
+    public String showModify(@PathVariable("id") Long id, Model model) {
         RsData<PostDto> rsData = postService.getPostDetail(id);
         if (rsData.isFail()) {
             return rq.historyBack(new Exception("해당 번호의 글이 존재하지 않습니다."));
@@ -68,6 +68,8 @@ public class PostController {
         if(!author.equals(rq.getUser().getUsername())) {
             return rq.historyBack(new Exception("수정권한이 없습니다."));
         }
-        return "domain/post/post/write";
+
+        model.addAttribute("postDto", rsData.getData());
+        return "domain/post/post/modify";
     }
 }

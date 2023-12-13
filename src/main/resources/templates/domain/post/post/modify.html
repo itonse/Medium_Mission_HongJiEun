@@ -1,15 +1,15 @@
 <html layout:decorate="~{global/layout}">
 
 <div layout:fragment="content" class="p-2">
-    <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 글 작성</h1>
+    <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 글 수정</h1>
 
-    <form th:action="@{/post/write}" method="POST" onsubmit="submitWriteForm(this); return false;">
+    <form th:action="@{/post/modify}" method="POST" onsubmit="submitWriteForm(this); return false;">
 
         <!-- 공개글 여부 -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text">공개글</span>
-                <input type="checkbox" name="published" class="toggle toggle-lg" value="true">
+                <input type="checkbox" name="published" class="toggle toggle-lg" th:checked="${postDto.published}">
             </label>
         </div>
 
@@ -18,8 +18,8 @@
             <label class="label">
                 <span class="label-text">제목</span>
             </label>
-            <input type="text" name="title" placeholder="제목을 입력해주세요."
-                   class="input input-bordered">
+            <input type="text" name="title" th:value="${postDto.title}"
+                   placeholder="제목을 입력해주세요." class="input input-bordered">
         </div>
 
         <!-- body 입력 필드 -->
@@ -27,11 +27,12 @@
             <label class="label">
                 <span class="label-text">내용</span>
             </label>
-            <textarea name="body" id="body" class="form-control" rows="10" placeholder="내용을 입력해주세요."></textarea>
+            <textarea name="body" id="body" class="form-control" rows="10"
+                      th:text="${postDto.body}" placeholder="내용을 입력해주세요."></textarea>
         </div>
 
         <!-- 작성 버튼 -->
-        <button type="submit">작성</button>
+        <button type="submit">수정</button>
     </form>
 
     <script>
