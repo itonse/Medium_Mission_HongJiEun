@@ -3,7 +3,8 @@
 <div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 글 작성</h1>
 
-    <form th:action="@{/post/write}" method="POST" onsubmit="submitWriteForm(this); return false;">
+    <form th:object="${writeForm}" method="POST" onsubmit="submitWriteForm(this); return false;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <!-- 공개글 여부 -->
         <div class="form-control">
