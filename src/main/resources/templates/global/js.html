@@ -4,11 +4,18 @@
 </script>
 
 <script>
-    localStorage.setItem('historyBackMsg', msg);    // localStorage에 'historyBackMsg' 키로 'msg' 값을 저장
+    // 메시지나 예외 정보가 있는 경우 알림창을 표시
+    if (msg || exceptionStr) {
+        let messageToShow = msg ? msg : '오류가 발생했습니다.';   // 메시지가 없으면 기본 값 설정
+        if (exceptionStr) {
+            messageToShow += '\n상세 정보: ' + exceptionStr;
+        }
 
-    // 예외정보가 존재하면, 현재 날짜,시간을 키로 사용하여 exceptionStr을 세션 저장소에 저장(예외 상황의 상세 정보 기록)
-    if (exceptionStr) {
-        sessionStorage.setItem('exceptionStr__' + new Date(), exceptionStr);
+        // 알림창을 표시하고, 사용자가 확인을 누르면 이전 페이지로 이동
+        alert(messageToShow);
+        history.back();
+    } else {
+        // 메시지나 예외 정보가 없는 경우, 바로 이전 페이지로 이동
+        history.back();
     }
-    history.back();   // 이전 페이지로 이동(뒤로 가기)
 </script>
