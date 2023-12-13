@@ -4,12 +4,14 @@ import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
+import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -40,5 +42,18 @@ public class PostController {
     public String write(@Valid WriteForm writeForm) {
         postService.write(writeForm, rq.getUser());
         return "redirect:/post/list";
+    }
+
+    @GetMapping("/{id}")
+    public String postDetail(@PathVariable("id") Long id, Model model) {
+
+        RsData rsData = postService.getPostDetail(id);
+
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData.getMsg());
+        } else {
+            model.addAttribute("postDto", rsData.getData());
+            return "domain/post/post/detail";
+        }
     }
 }

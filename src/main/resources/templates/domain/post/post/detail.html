@@ -1,0 +1,47 @@
+<html layout:decorate="~{global/layout}">
+
+<head>
+    <title th:text="|게시글 내용 - ${postDto.id}. ${postDto.title}|"></title>
+    <style>
+        .post-header {
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        .post-detail {
+            font-size: 0.9em;
+            color: #555;
+            margin-right: 20px;
+        }
+        .post-title {
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .post-body {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="post-header">
+        <span class="post-detail">No.<span th:text="${postDto.id}"></span></span>
+        <span class="post-title" th:text="${postDto.title}"></span>
+        <span class="post-detail">작성자: <span th:text="${postDto.author}"></span></span>
+        <span class="post-detail"><span th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+    </div>
+
+    <div class="post-body" th:text="${postDto.body}"></div>
+</div>
+
+</body>
+
+</html>

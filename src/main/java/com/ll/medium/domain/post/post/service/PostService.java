@@ -2,9 +2,11 @@ package com.ll.medium.domain.post.post.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
-import com.ll.medium.domain.post.post.repository.PostRepository;
+import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.entity.Post;
+import com.ll.medium.domain.post.post.repository.PostRepository;
+import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -40,5 +42,26 @@ public class PostService {
 
             postRepository.save(post);
         });
+    }
+
+    public RsData getPostDetail(Long id) {
+        Optional<Post> postOptional = postRepository.findById(id);
+
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+
+            PostDto postDto = PostDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .body(post.getBody())
+                    .published(post.isPublished())
+                    .author(post.getAuthor().getUsername())
+                    .createDate(post.getCreateDate())
+                    .build();
+
+            return RsData.of("200", "success", postDto);
+        } else {
+            return RsData.of("404", "%d번 글이 존재하지 않습니다.".formatted(id));
+        }
     }
 }
