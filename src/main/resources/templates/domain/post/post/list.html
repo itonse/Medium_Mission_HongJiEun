@@ -1,13 +1,19 @@
 <table>
     <thead>
     <tr>
+        <th>글 번호</th>
         <th>제목</th>
+        <th>작성자</th>
         <th>작성일시</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="postDto : ${postsDto}">
-        <td th:text="${postDto.title}"></td>
+        <td th:text="${postDto.id}"></td>
+        <td>
+            <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
+        </td>
+        <td th:text="${postDto.author}"></td>
         <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>
