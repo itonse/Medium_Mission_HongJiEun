@@ -1,7 +1,7 @@
 package com.ll.medium.domain.post.post.controller;
 
+import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
-import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
@@ -26,8 +26,8 @@ public class PostController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        List<Post> posts = postService.getPublishedPosts();
-        model.addAttribute("posts", posts);
+        List<PostDto> publishedPosts = postService.getPublishedPosts();
+        model.addAttribute("postsDto", publishedPosts);
         return "domain/post/post/list";
     }
 
@@ -47,7 +47,7 @@ public class PostController {
     @GetMapping("/{id}")
     public String postDetail(@PathVariable("id") Long id, Model model) {
 
-        RsData rsData = postService.getPostDetail(id);
+        RsData<PostDto> rsData = postService.getPostDetail(id);
 
         if (rsData.isFail()) {
             return rq.historyBack(rsData.getMsg());

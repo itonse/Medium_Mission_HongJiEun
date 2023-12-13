@@ -6,9 +6,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="post : ${posts}">
-        <td th:text="${post.title}"></td>
-        <td th:text="${post.body}"></td>
+    <tr th:each="postDto : ${postsDto}">
+        <td th:text="${postDto.title}"></td>
+        <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>
 </table>

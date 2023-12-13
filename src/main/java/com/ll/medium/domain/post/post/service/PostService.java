@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,10 +23,23 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public List<Post> getPublishedPosts() {
-        return postRepository.findAll().stream()
+    public List<PostDto> getPublishedPosts() {
+        List<Post> posts = postRepository.findAll().stream()
                 .filter(Post::isPublished)
                 .toList();
+
+        List<PostDto> postsDto = posts.stream()
+                .map(post -> PostDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .body(post.getBody())
+                        .published(post.isPublished())
+                        .author(post.getAuthor().getUsername())
+                        .createDate(post.getCreateDate())
+                        .build())
+                .collect(Collectors.toList());
+
+        return postsDto;
     }
 
     @Transactional
@@ -44,7 +58,7 @@ public class PostService {
         });
     }
 
-    public RsData getPostDetail(Long id) {
+    public RsData<PostDto> getPostDetail(Long id) {
         Optional<Post> postOptional = postRepository.findById(id);
 
         if (postOptional.isPresent()) {
