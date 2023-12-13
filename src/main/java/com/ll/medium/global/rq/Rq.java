@@ -1,11 +1,11 @@
 package com.ll.medium.global.rq;
 
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.global.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +21,6 @@ import java.util.Optional;
 @Component
 @Getter
 @RequiredArgsConstructor
-@Slf4j
 public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
@@ -53,7 +52,8 @@ public class Rq {
 
     // 예외 메시지와 함께 이전 페이지로 돌아가기
     public String historyBack(Exception e) {
-        String exceptionStr = e.getMessage().toString();
+        resp.setStatus(400);
+        String exceptionStr = Ut.exception.toString(e);
         req.setAttribute("exceptionStr", exceptionStr);
 
         return "global/js";
