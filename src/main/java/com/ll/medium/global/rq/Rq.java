@@ -1,5 +1,6 @@
 package com.ll.medium.global.rq;
 
+import com.ll.medium.global.rsData.RsData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @RequestScope   // HTTP 요청마다 객체의 인스턴스가 새롭게 생성되고, 끝날 때 제거된다(다른 요청과의 데이터 충돌 방지)
@@ -38,5 +41,52 @@ public class Rq {
 
     public boolean isLogout() {
         return !isLogined();
+    }
+
+    // 오류 메시지와 함께 이전 페이지로 돌아가기
+    public String historyBack(String msg) {
+        resp.setStatus(400);    // 응답 상태코드를 400으로 설정
+        req.setAttribute("msg", msg);
+
+        return "global/js";
+    }
+
+    // 예외 메시지와 함께 이전 페이지로 돌아가기
+    public String historyBack(Exception e) {
+        String exceptionStr = e.getMessage().toString();
+        req.setAttribute("exceptionStr", exceptionStr);
+
+        return "global/js";
+    }
+
+    // 메시지를 담은 리다이렉트 경로 반환
+    public String redirect(String url, String msg) {
+        msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("redirect:");
+        sb.append(url);
+
+        if (!msg.isBlank()) {
+            sb.append("?msg=");
+            sb.append(msg);
+        }
+
+        return sb.toString();
+    }
+
+    // Rs 객체의 상태코드에 따라 특정 경로로 리다이렉트 하거나 이전 페이지로 돌아간다
+    public String redirectOrBack(String path, RsData<?> rs) {
+        if (rs.isFail()) {
+            return historyBack(rs.getMsg());
+        } else {
+            return redirect(path, rs.getMsg());
+        }
+    }
+
+    // HTTP 요청 속성을 설정
+    public void setAttribute(String key, Object value) {
+        req.setAttribute(key, value);
     }
 }
