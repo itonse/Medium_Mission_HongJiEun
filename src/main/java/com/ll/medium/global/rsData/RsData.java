@@ -20,7 +20,7 @@ public class RsData<T> {
     }
 
     public static <T> RsData<T> of(String resultCode, String msg, T data) {
-        int statusCode = Integer.parseInt(resultCode.split("-", 2)[0]);
+        int statusCode = Integer.parseInt(resultCode);
 
         return new RsData<>(resultCode, statusCode, msg, data);
     }
