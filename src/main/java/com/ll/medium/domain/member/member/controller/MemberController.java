@@ -27,7 +27,7 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")    // 302 Found
     public String join(@Valid JoinForm joinForm, Model model) {
-        RsData<?> joinRs = memberService.join(joinForm);
+        RsData<Object> joinRs = memberService.join(joinForm);
         if (joinRs.isFail()) {
             model.addAttribute("errorMsg", joinRs.getMsg());
             return "domain/member/member/join";

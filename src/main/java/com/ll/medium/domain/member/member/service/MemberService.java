@@ -17,7 +17,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public RsData<?> join(JoinForm joinForm) {
+    public RsData<Object> join(JoinForm joinForm) {
         if (memberRepository.existsByUsername(joinForm.getUsername())) {
             return RsData.of("400", "해당 아이디는 이미 사용중입니다.");
         }
