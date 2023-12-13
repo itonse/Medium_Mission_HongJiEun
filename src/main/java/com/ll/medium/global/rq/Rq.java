@@ -59,19 +59,28 @@ public class Rq {
         return "global/js";
     }
 
-    // 메시지를 담은 리다이렉트 경로 반환
+    // 메시지와 함께 리다이렉트 경로 반환
     public String redirect(String url, String msg) {
-        msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
-
         StringBuilder sb = new StringBuilder();
 
         sb.append("redirect:");
         sb.append(url);
 
         if (!msg.isBlank()) {
+            msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
             sb.append("?msg=");
             sb.append(msg);
         }
+
+        return sb.toString();
+    }
+
+    // 리다이렉트 경로 반환
+    public String redirect(String url) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("redirect:");
+        sb.append(url);
 
         return sb.toString();
     }
