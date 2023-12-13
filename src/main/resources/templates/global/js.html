@@ -1,0 +1,14 @@
+<script th:inline="javascript">
+    const msg = /*[[${msg}]]*/ null;    // 서버에서 전달 된 메시지 문자열을 JS 상수에 할당 (없으면 null 설정)
+    const exceptionStr = /*[[${exceptionStr}]]*/ null;     // 서버에서 전달 된 예외정보 문자열을 JS 상수에 할당 (없으면 null 설정)
+</script>
+
+<script>
+    localStorage.setItem('historyBackMsg', msg);    // localStorage에 'historyBackMsg' 키로 'msg' 값을 저장
+
+    // 예외정보가 존재하면, 현재 날짜,시간을 키로 사용하여 exceptionStr을 세션 저장소에 저장(예외 상황의 상세 정보 기록)
+    if (exceptionStr) {
+        sessionStorage.setItem('exceptionStr__' + new Date(), exceptionStr);
+    }
+    history.back();   // 이전 페이지로 이동(뒤로 가기)
+</script>
