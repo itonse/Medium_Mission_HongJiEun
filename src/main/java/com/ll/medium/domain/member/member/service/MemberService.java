@@ -31,6 +31,6 @@ public class MemberService {
 
         memberRepository.save(newMember);
 
-        return RsData.of("200");
+        return RsData.of("200", "%s님 회원가입을 축하합니다.".formatted(newMember.getUsername()));
     }
 }

@@ -2,6 +2,7 @@ package com.ll.medium.domain.member.member.controller;
 
 import com.ll.medium.domain.member.member.dto.JoinForm;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")    // 200 OK
@@ -32,7 +34,7 @@ public class MemberController {
             model.addAttribute("errorMsg", joinRs.getMsg());
             return "domain/member/member/join";
         }
-        return "redirect:/";
+        return rq.redirect("/", joinRs.getMsg());
     }
 
     @PreAuthorize("isAnonymous()")
