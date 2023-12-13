@@ -80,4 +80,20 @@ public class PostService {
             return RsData.of("404", "%d번 글이 존재하지 않습니다.".formatted(id));
         }
     }
+
+    @Transactional
+    public RsData<Object> modify(Long id, WriteForm writeForm) {
+        Optional<Post> postOptional = postRepository.findById(id);
+
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            post.setTitle(writeForm.getTitle());
+            post.setBody(writeForm.getBody());
+            post.setPublished(writeForm.isPublished());
+
+            return RsData.of("200", "성공적으로 수정하였습니다.");
+        } else {
+            return RsData.of("404", "해당 글은 존재하지 않습니다.");
+        }
+    }
 }

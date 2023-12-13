@@ -5,10 +5,7 @@ import com.ll.medium.global.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.AuditOverride;
 
@@ -19,6 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
+@Setter
 @Getter
 @ToString(callSuper = true)
 public class Post extends BaseEntity {

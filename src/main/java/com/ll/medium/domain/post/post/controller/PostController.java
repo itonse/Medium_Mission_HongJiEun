@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,6 +53,7 @@ public class PostController {
             return "domain/post/post/detail";
         }
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
     public String showModify(@PathVariable("id") Long id, Model model) {
@@ -65,11 +63,25 @@ public class PostController {
         }
 
         String author = rsData.getData().getAuthor();
-        if(!author.equals(rq.getUser().getUsername())) {
+        if (!author.equals(rq.getUser().getUsername())) {
             return rq.historyBack(new Exception("수정권한이 없습니다."));
         }
 
         model.addAttribute("postDto", rsData.getData());
         return "domain/post/post/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}/modify")
+    public String modify(@Valid WriteForm writeForm,
+                         @PathVariable("id") Long id, Model model) {
+        RsData<Object> rsData = postService.modify(id, writeForm);
+
+        model.addAttribute("id", id);
+
+        if (rsData.isFail()) {
+            return rq.redirect("/post/list", rsData.getMsg());
+        }
+        return rq.redirect("/post/{id}", rsData.getMsg());
     }
 }

@@ -3,7 +3,8 @@
 <div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 글 수정</h1>
 
-    <form th:action="@{/post/modify}" method="POST" onsubmit="submitWriteForm(this); return false;">
+    <form th:action="@{/post/{id}/modify(id=${id})}" method="POST" onsubmit="submitWriteForm(this); return false;">
+        <input type="hidden" name="_method" value="PUT" />
 
         <!-- 공개글 여부 -->
         <div class="form-control">
@@ -32,7 +33,7 @@
         </div>
 
         <!-- 작성 버튼 -->
-        <button type="submit">수정</button>
+        <button type="submit">수정완료</button>
     </form>
 
     <script>
