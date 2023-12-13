@@ -24,7 +24,7 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     public List<PostDto> getPublishedPosts() {
-        List<Post> posts = postRepository.findAll().stream()
+        List<Post> posts = postRepository.findAllByOrderByIdDesc().stream()
                 .filter(Post::isPublished)
                 .toList();
 
