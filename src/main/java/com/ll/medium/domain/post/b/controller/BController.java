@@ -21,11 +21,11 @@ public class BController {
     private final Rq rq;
 
     @GetMapping("/{username}")
-    public String getAllPostsByUser(Model model) {
-        String username = rq.getUser().getUsername();
+    public String getAllPostsByUser(@PathVariable("username") String username,
+                                    Model model) {
         List<PostDto> userPosts = postService.getUserPosts(username);
         model.addAttribute("postsDto", userPosts);
-        return "domain/post/post/list";
+        return "domain/post/b/b_list";
     }
 
     @GetMapping("/{username}/{id}")
