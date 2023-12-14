@@ -45,7 +45,7 @@ public class PostService {
 
     public Page<PostDto> getRecent30Posts() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
-        Page<Post> posts = postRepository.findTop30ByOrderByIdDesc(pageable);
+        Page<Post> posts = postRepository.findTop30(pageable);
 
         Page<PostDto> postsDto = convertToDtos(posts);
 
