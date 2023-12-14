@@ -8,6 +8,9 @@ import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +58,21 @@ public class PostService {
         List<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
+    }
+
+    public RsData<PostDto> getUserOrderedPost(String username, Integer order) {
+        Pageable pageable = PageRequest.of(order - 1, 1);
+        Page<Post> page = postRepository.findByAuthor_Username(username, pageable);
+
+        Optional<PostDto> postDtoOptional = page.stream()
+                .findFirst()
+                .map(this::convertToDto);
+
+        if (postDtoOptional.isPresent()) {
+            return RsData.of("200", "success", postDtoOptional.get());
+        } else {
+            return RsData.of("404", "fail");
+        }
     }
 
     @Transactional

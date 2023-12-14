@@ -3,11 +3,12 @@ package com.ll.medium.domain.post.b.controller;
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
+import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -19,12 +20,26 @@ public class BController {
     private final PostService postService;
     private final Rq rq;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{username}")
     public String getAllPostsByUser(Model model) {
         String username = rq.getUser().getUsername();
         List<PostDto> userPosts = postService.getUserPosts(username);
         model.addAttribute("postsDto", userPosts);
         return "domain/post/post/list";
+    }
+
+    @GetMapping("/{username}/{id}")
+    public String getUserPostByOrder(@PathVariable("username") String username,
+                                     @PathVariable("id") Integer id,
+                                     Model model) {
+        RsData<PostDto> rsData = postService.getUserOrderedPost(username, id);
+
+        if (rsData.isFail()) {
+            return rq.historyBack("%s님의 %d번째 글은 존재하지 않습니다."
+                    .formatted("username", id));
+        }
+
+        model.addAttribute("postDto", rsData.getData());
+        return "domain/post/post/detail";
     }
 }
