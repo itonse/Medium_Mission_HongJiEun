@@ -6,15 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findAllByOrderByIdDesc();
+    Page<Post> findAllByPublishedTrue(Pageable pageable);
 
-    List<Post> findAllByAuthor_UsernameOrderByIdDesc(String author);
+    Page<Post> findAllByAuthor_Username(Pageable pageable, String author);
 
-    List<Post> findTop30ByOrderByIdDesc();
+    Page<Post> findTop30ByOrderByIdDesc(Pageable pageable);
 
     Page<Post> findByAuthor_Username(String username, Pageable pageable);
 }

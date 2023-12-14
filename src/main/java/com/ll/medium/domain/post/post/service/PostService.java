@@ -11,13 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,36 +25,29 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public List<PostDto> getPublishedPosts() {
-        List<Post> posts = postRepository.findAllByOrderByIdDesc().stream()
-                .filter(Post::isPublished)
-                .toList();
+    public Page<PostDto> getPublishedPosts() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
+        Page<Post> posts = postRepository.findAllByPublishedTrue(pageable);
 
-        List<PostDto> postsDto = convertToDtos(posts);
-
-        return postsDto;
-    }
-
-    public List<PostDto> getMyPosts(String author) {
-        List<Post> posts = postRepository.findAllByAuthor_UsernameOrderByIdDesc(author);
-
-        List<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
     }
 
-    public List<PostDto> getRecent30Posts() {
-        List<Post> posts = postRepository.findTop30ByOrderByIdDesc();
+    public Page<PostDto> getUserPosts(String author) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+        Page<Post> posts = postRepository.findAllByAuthor_Username(pageable, author);
 
-        List<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
     }
 
-    public List<PostDto> getUserPosts(String author) {
-        List<Post> posts = postRepository.findAllByAuthor_UsernameOrderByIdDesc(author);
+    public Page<PostDto> getRecent30Posts() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
+        Page<Post> posts = postRepository.findTop30ByOrderByIdDesc(pageable);
 
-        List<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
     }
@@ -139,9 +131,7 @@ public class PostService {
                 .build();
     }
 
-    private List<PostDto> convertToDtos(List<Post> posts) {
-        return posts.stream()
-                .map(this::convertToDto)    // Post객체를 PostDto로 변환
-                .collect(Collectors.toList());
+    private Page<PostDto> convertToDtos(Page<Post> posts) {
+        return posts.map(this::convertToDto);
     }
 }

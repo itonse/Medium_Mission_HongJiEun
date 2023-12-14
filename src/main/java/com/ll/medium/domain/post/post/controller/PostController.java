@@ -7,12 +7,11 @@ import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/post")
@@ -23,7 +22,7 @@ public class PostController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        List<PostDto> publishedPosts = postService.getPublishedPosts();
+        Page<PostDto> publishedPosts = postService.getPublishedPosts();
         model.addAttribute("postsDto", publishedPosts);
         return "domain/post/post/list";
     }
@@ -32,7 +31,7 @@ public class PostController {
     @GetMapping("/myList")
     public String getMyPosts(Model model) {
         String author = rq.getUser().getUsername();
-        List<PostDto> myPosts = postService.getMyPosts(author);
+        Page<PostDto> myPosts = postService.getUserPosts(author);
         model.addAttribute("postsDto", myPosts);
         return "domain/post/post/list";
     }
