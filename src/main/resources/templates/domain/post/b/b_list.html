@@ -22,4 +22,12 @@
         </tr>
         </tbody>
     </table>
+
+    <div>
+        <ul>
+            <li th:each="pageNum : ${#numbers.sequence(1, postsDto.totalPages)}">
+                <a th:href="@{/posts(page=${pageNum})}" th:text="${pageNum}"></a>
+            </li>
+        </ul>
+    </div>
 </div>
