@@ -29,7 +29,7 @@ public class PostService {
                 .toList();
 
         List<PostDto> postsDto = posts.stream()
-                .map(this::createDto)    // Post객체를 PostDto로 변환
+                .map(this::convertToDto)    // Post객체를 PostDto로 변환
                 .collect(Collectors.toList());
 
         return postsDto;
@@ -59,7 +59,7 @@ public class PostService {
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
 
-            PostDto postDto = createDto(post);
+            PostDto postDto = convertToDto(post);
 
             return RsData.of("200", "success", postDto);
         } else {
@@ -88,7 +88,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    private PostDto createDto(Post post) {
+    private PostDto convertToDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
