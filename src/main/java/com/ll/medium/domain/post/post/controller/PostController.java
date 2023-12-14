@@ -29,6 +29,15 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myList")
+    public String getMyPosts(Model model) {
+        String author = rq.getUser().getUsername();
+        List<PostDto> myPosts = postService.getMyPosts(author);
+        model.addAttribute("postsDto", myPosts);
+        return "domain/post/post/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
         return "domain/post/post/write";
