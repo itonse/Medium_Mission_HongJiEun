@@ -80,7 +80,7 @@ public class PostControllerTest {
         // THEN
         resultActions
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/post/list"));
+                .andExpect(redirectedUrlPattern("/post/list*"));
     }
 
 }

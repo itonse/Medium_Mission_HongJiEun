@@ -75,16 +75,6 @@ public class Rq {
         return sb.toString();
     }
 
-    // 리다이렉트 경로 반환
-    public String redirect(String url) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("redirect:");
-        sb.append(url);
-
-        return sb.toString();
-    }
-
     // Rs 객체의 상태코드에 따라 특정 경로로 리다이렉트 하거나 이전 페이지로 돌아간다
     public String redirectOrBack(String path, RsData<?> rs) {
         if (rs.isFail()) {
