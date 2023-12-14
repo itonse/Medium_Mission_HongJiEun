@@ -49,6 +49,14 @@ public class PostService {
         return postsDto;
     }
 
+    public List<PostDto> getUserPosts(String author) {
+        List<Post> posts = postRepository.findAllByAuthor_UsernameOrderByIdDesc(author);
+
+        List<PostDto> postsDto = convertToDtos(posts);
+
+        return postsDto;
+    }
+
     @Transactional
     public RsData<Object> write(WriteForm writeForm, User user) {
         Optional<Member> authorOptional = memberRepository.findByUsername(user.getUsername());
