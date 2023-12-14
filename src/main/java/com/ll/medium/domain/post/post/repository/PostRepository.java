@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByIdDesc();
 
     List<Post> findAllByAuthor_UsernameOrderByIdDesc(String author);
+
+    List<Post> findTop30ByOrderByIdDesc();
 }

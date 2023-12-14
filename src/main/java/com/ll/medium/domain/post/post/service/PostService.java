@@ -28,9 +28,7 @@ public class PostService {
                 .filter(Post::isPublished)
                 .toList();
 
-        List<PostDto> postsDto = posts.stream()
-                .map(this::convertToDto)    // Post객체를 PostDto로 변환
-                .collect(Collectors.toList());
+        List<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
     }
@@ -38,9 +36,15 @@ public class PostService {
     public List<PostDto> getMyPosts(String author) {
         List<Post> posts = postRepository.findAllByAuthor_UsernameOrderByIdDesc(author);
 
-        List<PostDto> postsDto = posts.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        List<PostDto> postsDto = convertToDtos(posts);
+
+        return postsDto;
+    }
+
+    public List<PostDto> getRecent30Posts() {
+        List<Post> posts = postRepository.findTop30ByOrderByIdDesc();
+
+        List<PostDto> postsDto = convertToDtos(posts);
 
         return postsDto;
     }
@@ -107,5 +111,11 @@ public class PostService {
                 .author(post.getAuthor().getUsername())
                 .createDate(post.getCreateDate())
                 .build();
+    }
+
+    private List<PostDto> convertToDtos(List<Post> posts) {
+        return posts.stream()
+                .map(this::convertToDto)    // Post객체를 PostDto로 변환
+                .collect(Collectors.toList());
     }
 }
