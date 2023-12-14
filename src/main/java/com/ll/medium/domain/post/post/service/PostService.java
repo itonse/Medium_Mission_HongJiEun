@@ -29,14 +29,7 @@ public class PostService {
                 .toList();
 
         List<PostDto> postsDto = posts.stream()
-                .map(post -> PostDto.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .body(post.getBody())
-                        .published(post.isPublished())
-                        .author(post.getAuthor().getUsername())
-                        .createDate(post.getCreateDate())
-                        .build())
+                .map(this::createDto)    // Post객체를 PostDto로 변환
                 .collect(Collectors.toList());
 
         return postsDto;
@@ -66,14 +59,7 @@ public class PostService {
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
 
-            PostDto postDto = PostDto.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .body(post.getBody())
-                    .published(post.isPublished())
-                    .author(post.getAuthor().getUsername())
-                    .createDate(post.getCreateDate())
-                    .build();
+            PostDto postDto = createDto(post);
 
             return RsData.of("200", "success", postDto);
         } else {
@@ -91,9 +77,25 @@ public class PostService {
             post.setBody(writeForm.getBody());
             post.setPublished(writeForm.isPublished());
 
-            return RsData.of("200", "성공적으로 수정하였습니다.");
+            return RsData.of("200", "성공적으로 수정되었습니다.");
         } else {
             return RsData.of("404", "해당 글은 존재하지 않습니다.");
         }
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        postRepository.deleteById(id);
+    }
+
+    private PostDto createDto(Post post) {
+        return PostDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .body(post.getBody())
+                .published(post.isPublished())
+                .author(post.getAuthor().getUsername())
+                .createDate(post.getCreateDate())
+                .build();
     }
 }

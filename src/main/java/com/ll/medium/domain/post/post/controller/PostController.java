@@ -73,7 +73,7 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/modify")
-    public String modify(@Valid WriteForm writeForm,
+    public String modifyPost(@Valid WriteForm writeForm,
                          @PathVariable("id") Long id, Model model) {
         RsData<Object> rsData = postService.modify(id, writeForm);
 
@@ -83,5 +83,23 @@ public class PostController {
             return rq.redirect("/post/list", rsData.getMsg());
         }
         return rq.redirect("/post/{id}", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}/delete")
+    public String deletePost(@PathVariable("id") Long id) {
+        RsData<PostDto> rsData = postService.getPostDetail(id);
+        if (rsData.isFail()) {
+            return rq.historyBack(new Exception("해당 번호의 글이 존재하지 않습니다."));
+        }
+
+        String author = rsData.getData().getAuthor();
+        if (!author.equals(rq.getUser().getUsername())) {
+            return rq.historyBack(new Exception("삭제권한이 없습니다."));
+        }
+
+        postService.delete(id);
+
+        return rq.redirect("/post/list", "글을 삭제하였습니다.");
     }
 }

@@ -12,11 +12,13 @@
             font-size: 0.8em;
             margin-top: 5px;
         }
+
         .success-text {
             color: green;
             font-size: 0.8em;
             margin-top: 5px;
         }
+
         .alert-danger {
             color: red;
         }
@@ -37,5 +39,6 @@
 <th:block layout:fragment="header"></th:block>
 <th:block th:replace="~{global/navbar :: navbarFragment}"></th:block>
 <th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="script"></th:block>
 </body>
 </html>
