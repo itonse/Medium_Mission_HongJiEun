@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>미디엄</title>
+
+    <style>
+        .warning-text {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .success-text {
+            color: green;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .alert-danger {
+            color: red;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/resource/global.css">
+    <script src="/resource/global.js"></script>
+
+    <script>
+        const urlParams = getUrlParams(location.href);
+
+        if (urlParams.msg) {
+            alert(urlParams.msg);
+        }
+    </script>
+</head>
+<body>
+<th:block layout:fragment="header"></th:block>
+<th:block th:replace="~{global/navbar :: navbarFragment}"></th:block>
+<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

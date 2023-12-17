@@ -1,0 +1,56 @@
+<html layout:decorate="~{global/layout}">
+
+<div layout:fragment="content" class="p-2">
+    <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 로그인</h1>
+
+    <form th:action="@{/member/login}" method="POST" onsubmit="submitLoginForm(this); return false;">
+        <!-- 입력한 정보로 등록 된 사용자가 없을 때 -->
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                사용자ID 또는 비밀번호를 확인해 주세요.
+            </div>
+        </div>
+
+        <!-- 아이디 입력 필드 -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">아이디</span>
+            </label>
+            <input type="text" name="username" placeholder="아이디를 입력해주세요."
+                   class="input input-bordered">
+        </div>
+
+        <!-- 비밀번호 입력 필드 -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">비밀번호</span>
+            </label>
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요."
+                   class="input input-bordered">
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <button type="submit">로그인</button>
+    </form>
+
+    <script>
+        function submitLoginForm(form) {
+            form.username.value = form.username.value.trim();
+            if (form.username.value.length == 0) {
+                alert('아이디를 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            form.password.value = form.password.value.trim();
+            if (form.password.value.length == 0) {
+                alert('비밀번호를 입력해주세요.');
+                form.password.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+</div>
+</html>

@@ -1,0 +1,21 @@
+<script th:inline="javascript">
+    const msg = /*[[${msg}]]*/ null;    // 서버에서 전달 된 메시지 문자열을 JS 상수에 할당 (없으면 null 설정)
+    const exceptionStr = /*[[${exceptionStr}]]*/ null;     // 서버에서 전달 된 예외정보 문자열을 JS 상수에 할당 (없으면 null 설정)
+</script>
+
+<script>
+    // 메시지나 예외 정보가 있는 경우 알림창을 표시
+    if (msg || exceptionStr) {
+        let messageToShow = msg ? msg : '오류가 발생했습니다.';   // 메시지가 없으면 기본 값 설정
+        if (exceptionStr) {
+            messageToShow += '\n상세 정보: ' + exceptionStr;
+        }
+
+        // 알림창을 표시하고, 사용자가 확인을 누르면 이전 페이지로 이동
+        alert(messageToShow);
+        history.back();
+    } else {
+        // 메시지나 예외 정보가 없는 경우, 바로 이전 페이지로 이동
+        history.back();
+    }
+</script>
