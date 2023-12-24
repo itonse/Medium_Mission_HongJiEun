@@ -29,7 +29,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
         Page<Post> posts = postRepository.findAllByPublishedTrue(pageable);
 
-        Page<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = PostDto.toDtoPage(posts);
 
         return postsDto;
     }
@@ -38,7 +38,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
         Page<Post> posts = postRepository.findAllByAuthor_Username(pageable, author);
 
-        Page<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = PostDto.toDtoPage(posts);
 
         return postsDto;
     }
@@ -47,18 +47,18 @@ public class PostService {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
         Page<Post> posts = postRepository.findTop30(pageable);
 
-        Page<PostDto> postsDto = convertToDtos(posts);
+        Page<PostDto> postsDto = PostDto.toDtoPage(posts);
 
         return postsDto;
     }
 
-    public RsData<PostDto> getUserOrderedPost(String username, Integer order) {
+    public RsData<PostDto> getUserOrderedPost(String username, Integer order) {     // 특정 회원의 N번째 글 상세보기에 사용
         Pageable pageable = PageRequest.of(order - 1, 1);
         Page<Post> page = postRepository.findByAuthor_Username(username, pageable);
 
         Optional<PostDto> postDtoOptional = page.stream()
                 .findFirst()
-                .map(this::convertToDto);
+                .map(PostDto::toDto);
 
         if (postDtoOptional.isPresent()) {
             return RsData.of("200", "success", postDtoOptional.get());
@@ -91,7 +91,7 @@ public class PostService {
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
 
-            PostDto postDto = convertToDto(post);
+            PostDto postDto = PostDto.toDto(post);
 
             return RsData.of("200", "success", postDto);
         } else {
@@ -118,20 +118,5 @@ public class PostService {
     @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
-    }
-
-    private PostDto convertToDto(Post post) {
-        return PostDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .body(post.getBody())
-                .published(post.isPublished())
-                .author(post.getAuthor().getUsername())
-                .createDate(post.getCreateDate())
-                .build();
-    }
-
-    private Page<PostDto> convertToDtos(Page<Post> posts) {
-        return posts.map(this::convertToDto);
     }
 }
