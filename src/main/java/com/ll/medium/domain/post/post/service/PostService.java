@@ -26,7 +26,7 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     public Page<PostDto> getPublishedPosts() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
         Page<Post> posts = postRepository.findAllByPublishedTrue(pageable);
 
         Page<PostDto> postsDto = PostDto.toDtoPage(posts);
@@ -44,8 +44,8 @@ public class PostService {
     }
 
     public Page<PostDto> getRecent30Posts() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate"));
-        Page<Post> posts = postRepository.findTop30(pageable);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+        Page<Post> posts = postRepository.findTop30ByPublishedTrue(pageable);
 
         Page<PostDto> postsDto = PostDto.toDtoPage(posts);
 

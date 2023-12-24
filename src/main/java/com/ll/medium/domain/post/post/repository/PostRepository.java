@@ -12,7 +12,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByAuthor_Username(Pageable pageable, String author);
 
-    Page<Post> findTop30(Pageable pageable);
+    Page<Post> findTop30ByPublishedTrue(Pageable pageable);
 
     Page<Post> findByAuthor_Username(String username, Pageable pageable);
 }
