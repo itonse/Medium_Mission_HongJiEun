@@ -16,7 +16,6 @@ import static lombok.AccessLevel.PROTECTED;
 @AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
-@Setter
 @Getter
 @ToString(callSuper = true)
 public class Post extends BaseEntity {
@@ -26,4 +25,10 @@ public class Post extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     Member author;
+
+    public void updatePost(String title, String body, boolean published) {
+        this.title = title;
+        this.body = body;
+        this.published = published;
+    }
 }

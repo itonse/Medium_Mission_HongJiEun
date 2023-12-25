@@ -105,9 +105,7 @@ public class PostService {
 
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            post.setTitle(writeForm.getTitle());
-            post.setBody(writeForm.getBody());
-            post.setPublished(writeForm.isPublished());
+            post.updatePost(writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
 
             return RsData.of("200", "성공적으로 수정되었습니다.");
         } else {
