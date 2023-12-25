@@ -1,6 +1,5 @@
 package com.ll.medium.global.rq;
 
-import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -75,6 +74,7 @@ public class Rq {
         return sb.toString();
     }
 
+    /*
     // Rs 객체의 상태코드에 따라 특정 경로로 리다이렉트 하거나 이전 페이지로 돌아간다
     public String redirectOrBack(String path, RsData<?> rs) {
         if (rs.isFail()) {
@@ -83,6 +83,7 @@ public class Rq {
             return redirect(path, rs.getMsg());
         }
     }
+     */
 
     // HTTP 요청 속성을 설정
     public void setAttribute(String key, Object value) {
