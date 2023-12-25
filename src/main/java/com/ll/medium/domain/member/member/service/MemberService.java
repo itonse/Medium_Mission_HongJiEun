@@ -34,7 +34,7 @@ public class MemberService {
 
     public void checkUsername(String inputUsername) {
         if (memberRepository.existsByUsername(inputUsername)) {
-            throw new RuntimeException("해당 이름은 이미 사용 중 입니다.");
+            throw new IllegalStateException("해당 이름은 이미 사용 중 입니다.");
         }
     }
 }

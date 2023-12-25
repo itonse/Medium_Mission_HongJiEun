@@ -31,8 +31,8 @@ public class MemberController {
         try {
             MemberDto memberDto = memberService.join(joinForm);
             return rq.redirect("/", memberDto.getUsername() + "님 가입을 축하합니다!");
-        } catch (RuntimeException e) {
-            return rq.historyBack("해당 아이디는 이미 사용중입니다.");
+        } catch (IllegalStateException e) {
+            return rq.historyBack(e.getMessage());
         }
     }
 
