@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RsData<T> {
+public class RsData<T> {    // 현재 사용X
     private String resultCode;
     private int statusCode;
     private String msg;

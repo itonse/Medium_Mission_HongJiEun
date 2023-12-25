@@ -2,5 +2,37 @@
 
 <div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 메인</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>글 번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="postDto : ${postsDto.content}">
+            <td th:text="${postDto.id}"></td>
+            <td>
+                <a th:href="@{/post/{id}(id=${postDto.id})}"
+                   th:text="${postDto.title}"></a>
+            </td>
+            <td th:text="${postDto.author}"></td>
+            <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <ul style="list-style: none; padding: 0; display: flex;">
+            <li th:each="pageNum : ${#numbers.sequence(postsDto.number - 5 > 0 ? postsDto.number - 5 : 1, postsDto.number + 4 < postsDto.totalPages ? postsDto.number + 4 : postsDto.totalPages)}">
+                <a th:href="@{/posts(page=${pageNum}, size=10)}" th:text="${pageNum}"
+                   th:class="${pageNum == postsDto.number + 1 ? 'current-page' : ''}"
+                   style="margin-right: 8px;"></a>
+            </li>
+        </ul>
+    </div>
 </div>
 </html>

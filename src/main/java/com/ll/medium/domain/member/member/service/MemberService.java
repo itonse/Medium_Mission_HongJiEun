@@ -1,9 +1,9 @@
 package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.dto.JoinForm;
+import com.ll.medium.domain.member.member.dto.MemberDto;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
-import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public RsData<Object> join(JoinForm joinForm) {
-        if (memberRepository.existsByUsername(joinForm.getUsername())) {
-            return RsData.of("400", "해당 아이디는 이미 사용중입니다.");
-        }
+    public MemberDto join(JoinForm joinForm) {
+        checkUsername(joinForm.getUsername());
 
         Member newMember = Member.builder()
                 .username(joinForm.getUsername())
@@ -31,6 +29,12 @@ public class MemberService {
 
         memberRepository.save(newMember);
 
-        return RsData.of("200", "%s님 회원가입을 축하합니다.".formatted(newMember.getUsername()));
+        return MemberDto.from(newMember);
+    }
+
+    public void checkUsername(String inputUsername) {
+        if (memberRepository.existsByUsername(inputUsername)) {
+            throw new IllegalStateException("해당 이름은 이미 사용 중 입니다.");
+        }
     }
 }
