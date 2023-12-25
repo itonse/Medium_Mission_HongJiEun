@@ -16,6 +16,6 @@ public class HomeController {
     public String showMain(Model model) {
         Page<PostDto> recent30Posts = postService.getRecent30Posts();
         model.addAttribute("postsDto", recent30Posts);
-        return "domain/post/post/list";
+        return "domain/home/home/main";
     }
 }
