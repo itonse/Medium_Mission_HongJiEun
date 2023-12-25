@@ -18,7 +18,7 @@ public class PostDto {
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
 
-    public static PostDto toDto(Post post) {
+    public static PostDto from(Post post) {
         return PostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -40,6 +40,6 @@ public class PostDto {
 
     public static Page<PostDto> toDtoPage(Page<Post> posts) {
         return posts
-                .map(PostDto::toDto);    // Page가 제공하는 메서드 (stream 사용X)
+                .map(PostDto::from);    // Page가 제공하는 메서드 (stream 사용X)
     }
 }

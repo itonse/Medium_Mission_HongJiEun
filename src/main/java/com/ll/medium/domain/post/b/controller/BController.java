@@ -3,7 +3,6 @@ package com.ll.medium.domain.post.b.controller;
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
-import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -11,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/b")
@@ -31,14 +32,13 @@ public class BController {
     public String getUserPostByOrder(@PathVariable("username") String username,
                                      @PathVariable("id") Integer id,
                                      Model model) {
-        RsData<PostDto> rsData = postService.getUserOrderedPost(username, id);
+        try {
+            PostDto postDto = postService.getUserOrderedPost(username, id);
+            model.addAttribute("postDto", postDto);
 
-        if (rsData.isFail()) {
-            return rq.historyBack("%s님의 %d번째 글은 존재하지 않습니다."
-                    .formatted("username", id));
+            return "domain/post/post/detail";
+        } catch (NoSuchElementException e) {
+            return rq.historyBack(e.getMessage());
         }
-
-        model.addAttribute("postDto", rsData.getData());
-        return "domain/post/post/detail";
     }
 }

@@ -4,7 +4,6 @@ import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
-import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/post")
@@ -45,69 +46,69 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm) {
-        RsData<Object> rsData = postService.write(writeForm, rq.getUser());
-        return rq.redirect("/post/list", rsData.getMsg());
+        postService.write(writeForm, rq.getUser());
+        return rq.redirect("/post/list", "글이 등록되었습니다.");
     }
 
     @GetMapping("/{id}")
     public String postDetail(@PathVariable("id") Long id, Model model) {
-
-        RsData<PostDto> rsData = postService.getPostDetail(id);
-
-        if (rsData.isFail()) {
-            return rq.historyBack(rsData.getMsg());
-        } else {
-            model.addAttribute("postDto", rsData.getData());
+        try {
+            PostDto postDto = postService.getPostDetail(id);
+            model.addAttribute("postDto", postDto);
             return "domain/post/post/detail";
+        } catch (NoSuchElementException e) {
+            return rq.historyBack(e.getMessage());
         }
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
     public String showModify(@PathVariable("id") Long id, Model model) {
-        RsData<PostDto> rsData = postService.getPostDetail(id);
-        if (rsData.isFail()) {
-            return rq.historyBack(new Exception("해당 번호의 글이 존재하지 않습니다."));
-        }
+        try {
+            PostDto postDto = postService.getPostDetail(id);
+            String author = postDto.getAuthor();
 
-        String author = rsData.getData().getAuthor();
-        if (!author.equals(rq.getUser().getUsername())) {
-            return rq.historyBack(new Exception("수정권한이 없습니다."));
-        }
+            if (!author.equals(rq.getUser().getUsername())) {
+                return rq.historyBack(new Exception("수정권한이 없습니다."));
+            }
 
-        model.addAttribute("postDto", rsData.getData());
-        return "domain/post/post/modify";
+            model.addAttribute("postDto", postDto);
+            return "domain/post/post/modify";
+        } catch (NoSuchElementException e) {
+            return rq.historyBack(e.getMessage());
+        }
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/modify")
     public String modifyPost(@Valid WriteForm writeForm,
-                         @PathVariable("id") Long id, Model model) {
-        RsData<Object> rsData = postService.modify(id, writeForm);
+                             @PathVariable("id") Long id, Model model) {
+        try {
+            postService.modify(id, writeForm);
+            model.addAttribute("id", id);
 
-        model.addAttribute("id", id);
-
-        if (rsData.isFail()) {
-            return rq.redirect("/post/list", rsData.getMsg());
+            return rq.redirect("/post/{id}", "성공적으로 수정되었습니다.");
+        } catch (NoSuchElementException e) {
+            return rq.redirect("/post/list", e.getMessage());
         }
-        return rq.redirect("/post/{id}", rsData.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/delete")
     public String deletePost(@PathVariable("id") Long id) {
-        RsData<PostDto> rsData = postService.getPostDetail(id);
-        if (rsData.isFail()) {
+        try {
+            PostDto postDto = postService.getPostDetail(id);
+            String author = postDto.getAuthor();
+
+            if (!author.equals(rq.getUser().getUsername())) {
+                return rq.historyBack(new Exception("삭제권한이 없습니다."));
+            }
+
+            postService.delete(id);
+
+            return rq.redirect("/post/list", "글을 삭제하였습니다.");
+        } catch (NoSuchElementException e) {
             return rq.historyBack(new Exception("해당 번호의 글이 존재하지 않습니다."));
         }
-
-        String author = rsData.getData().getAuthor();
-        if (!author.equals(rq.getUser().getUsername())) {
-            return rq.historyBack(new Exception("삭제권한이 없습니다."));
-        }
-
-        postService.delete(id);
-
-        return rq.redirect("/post/list", "글을 삭제하였습니다.");
     }
 }
