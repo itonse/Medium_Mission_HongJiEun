@@ -25,6 +25,7 @@ public class BController {
                                     Model model) {
         Page<PostDto> userPosts = postService.getUserPosts(username);
         model.addAttribute("postsDto", userPosts);
+
         return "domain/post/b/b_list";
     }
 

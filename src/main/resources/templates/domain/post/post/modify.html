@@ -3,14 +3,16 @@
 <div layout:fragment="content" class="p-2">
     <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 글 수정</h1>
 
-    <form th:action="@{/post/{id}/modify(id=${id})}" method="POST" onsubmit="submitWriteForm(this); return false;">
-        <input type="hidden" name="_method" value="PUT" />
+    <form th:action="@{/post/{id}/modify(id=${id})}" method="POST"
+          onsubmit="submitWriteForm(this); return false;">
+        <input type="hidden" name="_method" value="PUT"/>
 
         <!-- 공개글 여부 -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text">공개글</span>
-                <input type="checkbox" name="published" class="toggle toggle-lg" th:checked="${postDto.published}">
+                <input type="checkbox" name="published" class="toggle toggle-lg"
+                       th:checked="${postDto.published}">
             </label>
         </div>
 

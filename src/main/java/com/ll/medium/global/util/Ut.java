@@ -17,9 +17,9 @@ public class Ut {
             details.append("Exception Message: ").append(e.getMessage()).append("\n");
             // 예외 원인 추가 ex) Caused by: java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 5
             Optional.ofNullable(e.getCause())
-                            .ifPresent(cause -> {
-                                details.append("Caused by: ").append(cause).append("\n");
-                            });
+                    .ifPresent(cause -> {
+                        details.append("Caused by: ").append(cause).append("\n");
+                    });
             // 스택 트레이스 추가
             details.append("StackTrace:\n").append(stackTrace);
 

@@ -25,6 +25,7 @@ public class PostController {
     public String list(Model model) {
         Page<PostDto> publishedPosts = postService.getPublishedPosts();
         model.addAttribute("postsDto", publishedPosts);
+
         return "domain/post/post/list";
     }
 
@@ -34,6 +35,7 @@ public class PostController {
         String author = rq.getUser().getUsername();
         Page<PostDto> myPosts = postService.getUserPosts(author);
         model.addAttribute("postsDto", myPosts);
+
         return "domain/post/post/list";
     }
 
@@ -47,6 +49,7 @@ public class PostController {
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm) {
         postService.write(writeForm, rq.getUser());
+
         return rq.redirect("/post/list", "글이 등록되었습니다.");
     }
 
@@ -55,6 +58,7 @@ public class PostController {
         try {
             PostDto postDto = postService.getPostDetail(id);
             model.addAttribute("postDto", postDto);
+
             return "domain/post/post/detail";
         } catch (NoSuchElementException e) {
             return rq.historyBack(e.getMessage());
@@ -73,6 +77,7 @@ public class PostController {
             }
 
             model.addAttribute("postDto", postDto);
+
             return "domain/post/post/modify";
         } catch (NoSuchElementException e) {
             return rq.historyBack(e.getMessage());

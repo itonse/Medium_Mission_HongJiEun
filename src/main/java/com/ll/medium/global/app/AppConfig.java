@@ -46,6 +46,7 @@ public class AppConfig {
     public static String getResourcesStaticDirPath() {
         if (resourcesStaticDirPath == null) {
             ClassPathResource resource = new ClassPathResource("static/");
+
             try {
                 resourcesStaticDirPath = resource.getFile().getAbsolutePath();
             } catch (IOException e) {

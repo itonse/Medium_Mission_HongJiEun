@@ -11,7 +11,7 @@ public class MemberDto {
     private String email;
     private boolean verified;
 
-    public static MemberDto from (Member member) {
+    public static MemberDto from(Member member) {
         return MemberDto.builder()
                 .username(member.getUsername())
                 .email(member.getEmail())

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @ControllerAdvice
 @Slf4j
 @RequiredArgsConstructor
@@ -20,11 +21,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleValidException(MethodArgumentNotValidException exception) {
         List<String> errors = new ArrayList<>();
+
         exception.getBindingResult().getAllErrors()
                 .forEach((error -> errors.add(error.getDefaultMessage())));
 
         String joinedErrors = String.join(", ", errors);
-        log.info(errors.toString());
+        log.error(errors.toString());
+
         return rq.historyBack(joinedErrors);
     }
 }

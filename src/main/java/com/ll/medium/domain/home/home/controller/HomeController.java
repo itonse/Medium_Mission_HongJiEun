@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class HomeController {
     private final PostService postService;
+
     @GetMapping("/")
     public String showMain(Model model) {
         Page<PostDto> recent30Posts = postService.getRecent30Posts();
         model.addAttribute("postsDto", recent30Posts);
+
         return "domain/home/home/main";
     }
 }
