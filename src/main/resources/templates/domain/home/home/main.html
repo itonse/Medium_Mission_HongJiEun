@@ -16,7 +16,7 @@
         <tr th:each="postDto : ${postsDto.content}">
             <td th:text="${postDto.id}"></td>
             <td>
-                <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
+                <a th:href="@{/post/{id}(id=${postDto.id})}" th:text="${postDto.title}"></a>
             </td>
             <td th:text="${postDto.author}"></td>
             <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
