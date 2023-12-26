@@ -1,4 +1,4 @@
-package com.ll.medium.domain.post.b.controller;
+package com.ll.medium.domain.post.blog.controller;
 
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.service.PostService;
@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @Controller
 @RequestMapping("/b")
 @RequiredArgsConstructor
-public class BController {
+public class BlogController {
     private final PostService postService;
     private final Rq rq;
 
@@ -34,7 +34,7 @@ public class BController {
         model.addAttribute("username", username);
         model.addAttribute("postsDto", userPosts);
 
-        return "domain/post/b/b_list";
+        return "blog_list";
     }
 
     @GetMapping("/{username}/{id}")
