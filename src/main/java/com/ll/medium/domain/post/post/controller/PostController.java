@@ -7,6 +7,9 @@ import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +25,11 @@ public class PostController {
     private final Rq rq;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        Page<PostDto> publishedPosts = postService.getPublishedPosts();
+    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
+        Pageable pageable = PageRequest.of(page -1, 10, Sort.by("createDate").descending());
+
+        Page<PostDto> publishedPosts = postService.getPublishedPosts(pageable);
+
         model.addAttribute("postsDto", publishedPosts);
 
         return "domain/post/post/list";
@@ -31,12 +37,20 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
-    public String getMyPosts(Model model) {
-        String author = rq.getUser().getUsername();
-        Page<PostDto> myPosts = postService.getUserPosts(author);
-        model.addAttribute("postsDto", myPosts);
+    public String getMyPosts(@RequestParam(defaultValue = "1") int page, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("createDate").descending());
 
-        return "domain/post/post/list";
+        String author = rq.getUser().getUsername();
+        Page<PostDto> myPosts = postService.getUserPosts(pageable, author);
+
+        if (myPosts.isEmpty()) {
+            return rq.historyBack(new NoSuchElementException("회원님이 작성한 글이 없습니다."));
+        } else {
+
+            model.addAttribute("postsDto", myPosts);
+
+            return "domain/post/post/myList";
+        }
     }
 
     @PreAuthorize("isAuthenticated()")

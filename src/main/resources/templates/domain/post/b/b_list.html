@@ -2,7 +2,7 @@
 
 <div layout:fragment="content" class="p-2">
 
-    <h2 th:text="${postsDto[0].author} + '님의 글 리스트'">Author's Post List</h2>
+    <h3 th:text="${username} + '님의 글 리스트'">Author's Post List</h3>
 
     <table>
         <thead>
@@ -23,10 +23,33 @@
         </tbody>
     </table>
 
-    <div>
-        <ul>
-            <li th:each="pageNum : ${#numbers.sequence(1, postsDto.totalPages)}">
-                <a th:href="@{/posts(page=${pageNum})}" th:text="${pageNum}"></a>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <ul style="list-style: none; padding: 0; display: flex;">
+            <!-- 항상 첫 번째 페이지 링크를 표시 -->
+            <li>
+                <a th:href="@{'/b/' + ${username}(page=1, size=10)}" th:text="1"
+                   th:class="${postsDto.number == 0 ? 'current-page' : ''}"
+                   style="margin-right: 8px;"></a>
+            </li>
+
+            <!-- 총 페이지 수가 5개를 초과하고 현재 페이지가 첫 5개 페이지를 넘어설 경우, 줄임표(...) 표시 -->
+            <li th:if="${postsDto.totalPages > 5 and postsDto.number >= 5}">
+                <span>...</span>
+            </li>
+
+            <!-- 페이지 번호 링크 -->
+            <li th:each="pageNum : ${#numbers.sequence(2, postsDto.totalPages > 5 ? 5 : postsDto.totalPages)}" th:if="${postsDto.number < 5}">
+                <a th:href="@{'/b/' + ${username}(page=${pageNum}, size=10)}" th:text="${pageNum}"
+                   th:class="${pageNum - 1 == postsDto.number ? 'current-page' : ''}"
+                   style="margin-right: 8px;"></a>
+            </li>
+
+            <!-- 총 페이지 수가 5개를 초과하는 경우, 줄임표와 마지막 페이지 링크 표시 -->
+            <li th:if="${postsDto.totalPages > 5}">
+                <span>...</span>
+                <a th:href="@{'/b/' + ${username}(page=${postsDto.totalPages}, size=10)}" th:text="${postsDto.totalPages}"
+                   th:class="${postsDto.totalPages - 1 == postsDto.number ? 'current-page' : ''}"
+                   style="margin-right: 8px;"></a>
             </li>
         </ul>
     </div>

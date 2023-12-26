@@ -1,12 +1,14 @@
 <html layout:decorate="~{global/layout}">
 
 <div layout:fragment="content" class="p-2">
+
+    <h2>내 글</h2>
+
     <table>
         <thead>
         <tr>
             <th>글 번호</th>
             <th>제목</th>
-            <th>작성자</th>
             <th>작성일시</th>
         </tr>
         </thead>
@@ -16,7 +18,6 @@
             <td>
                 <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
             </td>
-            <td th:text="${postDto.author}"></td>
             <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
@@ -26,7 +27,7 @@
         <ul style="list-style: none; padding: 0; display: flex;">
             <!-- 항상 첫 번째 페이지 링크를 표시 -->
             <li>
-                <a th:href="@{/post/list(page=1, size=10)}" th:text="1"
+                <a th:href="@{/post/myList(page=1, size=10)}" th:text="1"
                    th:class="${postsDto.number == 0 ? 'current-page' : ''}"
                    style="margin-right: 8px;"></a>
             </li>
@@ -38,7 +39,7 @@
 
             <!-- 페이지 번호 링크 -->
             <li th:each="pageNum : ${#numbers.sequence(2, postsDto.totalPages > 5 ? 5 : postsDto.totalPages)}" th:if="${postsDto.number < 5}">
-                <a th:href="@{/post/list(page=${pageNum}, size=10)}" th:text="${pageNum}"
+                <a th:href="@{/post/myList(page=${pageNum}, size=10)}" th:text="${pageNum}"
                    th:class="${pageNum - 1 == postsDto.number ? 'current-page' : ''}"
                    style="margin-right: 8px;"></a>
             </li>
@@ -46,7 +47,7 @@
             <!-- 총 페이지 수가 5개를 초과하는 경우, 줄임표와 마지막 페이지 링크 표시 -->
             <li th:if="${postsDto.totalPages > 5}">
                 <span>...</span>
-                <a th:href="@{/post/list(page=${postsDto.totalPages}, size=10)}" th:text="${postsDto.totalPages}"
+                <a th:href="@{/post/myList(page=${postsDto.totalPages}, size=10)}" th:text="${postsDto.totalPages}"
                    th:class="${postsDto.totalPages - 1 == postsDto.number ? 'current-page' : ''}"
                    style="margin-right: 8px;"></a>
             </li>
