@@ -15,6 +15,7 @@
                     <a class="nav-link" th:href="@{/member/login}">로그인</a>
                 </li>
                 <li class="nav-item" th:if="${@rq.isLogined()}">
+                    <a class="nav-link" th:href="@{/post/write}">글 작성</a>
                     <a class="nav-link" th:href="@{/member/logout}">로그아웃</a>
                 </li>
             </ul>
