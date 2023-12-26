@@ -1,7 +1,7 @@
 package com.ll.medium.domain.post.post.entity;
 
 import com.ll.medium.domain.member.member.entity.Member;
-import com.ll.medium.global.jpa.baseEntity.BaseEntity;
+import com.ll.medium.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
