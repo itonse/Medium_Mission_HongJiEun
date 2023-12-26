@@ -28,13 +28,9 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")    // 302 Found
     public String join(@Valid JoinForm joinForm) {
-        try {
-            MemberDto memberDto = memberService.join(joinForm);
+        MemberDto memberDto = memberService.join(joinForm);
 
-            return rq.redirect("/", memberDto.getUsername() + "님 가입을 축하합니다!");
-        } catch (IllegalStateException e) {
-            return rq.historyBack(e.getMessage());
-        }
+        return rq.redirect("/", memberDto.getUsername() + "님 가입을 축하합니다!");
     }
 
     @PreAuthorize("isAnonymous()")

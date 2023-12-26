@@ -3,6 +3,7 @@ package com.ll.medium.domain.post.post.controller;
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.exception.CustomException;
 import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
+import static com.ll.medium.global.exception.ErrorCode.*;
 
 @Controller
 @RequestMapping("/post")
@@ -26,7 +27,7 @@ public class PostController {
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page -1, 10, Sort.by("createDate").descending());
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("createDate").descending());
 
         Page<PostDto> publishedPosts = postService.getPublishedPosts(pageable);
 
@@ -44,7 +45,7 @@ public class PostController {
         Page<PostDto> myPosts = postService.getUserPosts(pageable, author);
 
         if (myPosts.isEmpty()) {
-            return rq.historyBack(new NoSuchElementException("회원님이 작성한 글이 없습니다."));
+            throw new CustomException(MEMBER_POSTS_NOT_FOUND);
         } else {
 
             model.addAttribute("postsDto", myPosts);
@@ -69,65 +70,50 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String postDetail(@PathVariable("id") Long id, Model model) {
-        try {
-            PostDto postDto = postService.getPostDetail(id);
-            model.addAttribute("postDto", postDto);
+        PostDto postDto = postService.getPostDetail(id);
+        model.addAttribute("postDto", postDto);
 
-            return "domain/post/post/detail";
-        } catch (NoSuchElementException e) {
-            return rq.historyBack(e.getMessage());
-        }
+        return "domain/post/post/detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
     public String showModify(@PathVariable("id") Long id, Model model) {
-        try {
             PostDto postDto = postService.getPostDetail(id);
             String author = postDto.getAuthor();
 
             if (!author.equals(rq.getUser().getUsername())) {
-                return rq.historyBack(new Exception("수정권한이 없습니다."));
+                throw new CustomException(EDIT_PERMISSION_DENIED);
             }
 
             model.addAttribute("postDto", postDto);
 
             return "domain/post/post/modify";
-        } catch (NoSuchElementException e) {
-            return rq.historyBack(e.getMessage());
-        }
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/modify")
     public String modifyPost(@Valid WriteForm writeForm,
                              @PathVariable("id") Long id, Model model) {
-        try {
-            postService.modify(id, writeForm);
-            model.addAttribute("id", id);
 
-            return rq.redirect("/post/{id}", "성공적으로 수정되었습니다.");
-        } catch (NoSuchElementException e) {
-            return rq.redirect("/post/list", e.getMessage());
-        }
+        postService.modify(id, writeForm);
+        model.addAttribute("id", id);
+
+        return rq.redirect("/post/{id}", "성공적으로 수정되었습니다.");
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/delete")
     public String deletePost(@PathVariable("id") Long id) {
-        try {
             PostDto postDto = postService.getPostDetail(id);
             String author = postDto.getAuthor();
 
             if (!author.equals(rq.getUser().getUsername())) {
-                return rq.historyBack(new Exception("삭제권한이 없습니다."));
+                throw new CustomException(DELETE_PERMISSION_DENIED);
             }
 
             postService.delete(id);
 
             return rq.redirect("/post/list", "글을 삭제하였습니다.");
-        } catch (NoSuchElementException e) {
-            return rq.historyBack(new Exception("해당 번호의 글이 존재하지 않습니다."));
-        }
     }
 }

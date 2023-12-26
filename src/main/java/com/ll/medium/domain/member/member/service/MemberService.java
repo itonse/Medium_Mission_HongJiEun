@@ -4,10 +4,13 @@ import com.ll.medium.domain.member.member.dto.JoinForm;
 import com.ll.medium.domain.member.member.dto.MemberDto;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
+import com.ll.medium.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.ll.medium.global.exception.ErrorCode.ALREADY_EXIST_USERNAME;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +37,7 @@ public class MemberService {
 
     public void checkUsername(String inputUsername) {
         if (memberRepository.existsByUsername(inputUsername)) {
-            throw new IllegalStateException("해당 이름은 이미 사용 중 입니다.");
+            throw new CustomException(ALREADY_EXIST_USERNAME);
         }
     }
 }

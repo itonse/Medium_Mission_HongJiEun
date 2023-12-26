@@ -30,4 +30,10 @@ public class GlobalExceptionHandler {
 
         return rq.historyBack(joinedErrors);
     }
+
+    @ExceptionHandler(CustomException.class)
+    public String handleCustomException(CustomException exception) {
+        log.error(exception.getErrorCode() + " : " + exception.getErrorCode().getMessage());
+        return rq.historyBack(exception);
+    }
 }

@@ -6,6 +6,7 @@ import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
+import com.ll.medium.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static com.ll.medium.global.exception.ErrorCode.NOT_FOUND_POST;
 
 @Service
 @Transactional(readOnly = true)
@@ -57,8 +59,7 @@ public class PostService {
         if (postDtoOptional.isPresent()) {
             return postDtoOptional.get();
         } else {
-            throw new NoSuchElementException("%s님의 %d번째 글은 존재하지 않습니다."
-                    .formatted("username", order));
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
@@ -86,7 +87,7 @@ public class PostService {
 
             return PostDto.from(post);
         } else {
-            throw new NoSuchElementException("%d번 글이 존재하지 않습니다.".formatted(id));
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
@@ -98,7 +99,7 @@ public class PostService {
             Post post = postOptional.get();
             post.updatePost(writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
         } else {
-            throw new NoSuchElementException("해당 글은 존재하지 않습니다.");
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
