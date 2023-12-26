@@ -74,17 +74,6 @@ public class Rq {
     }
 
     /*
-    // Rs 객체의 상태코드에 따라 특정 경로로 리다이렉트 하거나 이전 페이지로 돌아간다
-    public String redirectOrBack(String path, RsData<?> rs) {
-        if (rs.isFail()) {
-            return historyBack(rs.getMsg());
-        } else {
-            return redirect(path, rs.getMsg());
-        }
-    }
-     */
-
-    /*
     // HTTP 요청 속성을 설정
     public void setAttribute(String key, Object value) {
         req.setAttribute(key, value);
