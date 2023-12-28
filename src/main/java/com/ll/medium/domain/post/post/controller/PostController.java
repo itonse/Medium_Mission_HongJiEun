@@ -22,6 +22,7 @@ import static com.ll.medium.global.exception.ErrorCode.*;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 public class PostController {
+    private static final String MEMBERSHIP_REQUIRED_MSG = "이 글은 유료멤버십전용 입니다.";
     private final PostService postService;
     private final Rq rq;
 
@@ -71,6 +72,13 @@ public class PostController {
     @GetMapping("/{id}")
     public String postDetail(@PathVariable("id") Long id, Model model) {
         PostDto postDto = postService.getPostDetail(id);
+
+        if (postDto.isPaid() && !rq.getReq().isUserInRole("PAID")) {
+            if (rq.isLogout() || !postDto.getAuthor().equals(rq.getUser().getUsername())) {
+                postDto.setBody(MEMBERSHIP_REQUIRED_MSG);
+            }
+        }
+
         model.addAttribute("postDto", postDto);
 
         return "domain/post/post/detail";
@@ -79,16 +87,16 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
     public String showModify(@PathVariable("id") Long id, Model model) {
-            PostDto postDto = postService.getPostDetail(id);
-            String author = postDto.getAuthor();
+        PostDto postDto = postService.getPostDetail(id);
+        String author = postDto.getAuthor();
 
-            if (!author.equals(rq.getUser().getUsername())) {
-                throw new CustomException(EDIT_PERMISSION_DENIED);
-            }
+        if (!author.equals(rq.getUser().getUsername())) {
+            throw new CustomException(EDIT_PERMISSION_DENIED);
+        }
 
-            model.addAttribute("postDto", postDto);
+        model.addAttribute("postDto", postDto);
 
-            return "domain/post/post/modify";
+        return "domain/post/post/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -105,15 +113,15 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/delete")
     public String deletePost(@PathVariable("id") Long id) {
-            PostDto postDto = postService.getPostDetail(id);
-            String author = postDto.getAuthor();
+        PostDto postDto = postService.getPostDetail(id);
+        String author = postDto.getAuthor();
 
-            if (!author.equals(rq.getUser().getUsername())) {
-                throw new CustomException(DELETE_PERMISSION_DENIED);
-            }
+        if (!author.equals(rq.getUser().getUsername())) {
+            throw new CustomException(DELETE_PERMISSION_DENIED);
+        }
 
-            postService.delete(id);
+        postService.delete(id);
 
-            return rq.redirect("/post/list", "글을 삭제하였습니다.");
+        return rq.redirect("/post/list", "글을 삭제하였습니다.");
     }
 }

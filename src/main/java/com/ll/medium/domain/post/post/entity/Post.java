@@ -24,13 +24,15 @@ public class Post extends BaseTimeEntity {
     private String title;
     private String body;
     private boolean published;
+    private boolean paid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Member author;
 
-    public void updatePost(String title, String body, boolean published) {
+    public void updatePost(String title, String body, boolean published, boolean paid) {
         this.title = title;
         this.body = body;
         this.published = published;
+        this.paid = paid;
     }
 }

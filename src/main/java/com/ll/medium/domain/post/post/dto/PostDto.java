@@ -14,6 +14,7 @@ public class PostDto {
     private String title;
     private String body;
     private boolean published;
+    private boolean paid;
     private String author;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
@@ -24,6 +25,7 @@ public class PostDto {
                 .title(post.getTitle())
                 .body(post.getBody())
                 .published(post.isPublished())
+                .paid(post.isPaid())
                 .author(post.getAuthor().getUsername())
                 .createDate(post.getCreateDate())
                 .modifyDate(post.getModifyDate())
@@ -41,5 +43,9 @@ public class PostDto {
     public static Page<PostDto> toDtoPage(Page<Post> posts) {
         return posts
                 .map(PostDto::from);    // Page가 제공하는 메서드 (stream 사용X)
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 }

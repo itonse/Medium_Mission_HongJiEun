@@ -73,6 +73,7 @@ public class PostService {
                     .title(writeForm.getTitle())
                     .body(writeForm.getBody())
                     .published(writeForm.isPublished())
+                    .paid(writeForm.isPaid())
                     .build();
 
             postRepository.save(post);
@@ -97,7 +98,12 @@ public class PostService {
 
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            post.updatePost(writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
+            post.updatePost(
+                    writeForm.getTitle(),
+                    writeForm.getBody(),
+                    writeForm.isPublished(),
+                    writeForm.isPaid()
+            );
         } else {
             throw new CustomException(NOT_FOUND_POST);
         }
