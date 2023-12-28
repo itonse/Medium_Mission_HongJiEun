@@ -29,4 +29,5 @@ public class Member extends BaseTimeEntity {
     private String password;
     private String email;
     private boolean verified;
+    private boolean paid;
 }
