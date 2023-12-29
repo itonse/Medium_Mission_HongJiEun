@@ -40,7 +40,7 @@
         <span class="post-title" th:text="${postDto.title}"></span>
         <span class="post-detail">작성자: <span th:text="${postDto.author}"></span></span>
         <span class="post-detail"><span
-                th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                th:text="${#temporals.format(postDto.createDate, 'yy.MM.dd HH:mm')}"></span></span>
     </div>
 
     <div class="post-body" th:text="${postDto.body}"></div>

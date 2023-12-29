@@ -18,7 +18,7 @@
             <td>
                 <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
             </td>
-            <td th:text="${#temporals.format(postDto.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(postDto.createDate, 'yy.MM.dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
