@@ -26,7 +26,7 @@ public class BlogController {
 
     @GetMapping("/{username}")
     public String getPublishedPostsByUser(@RequestParam(defaultValue = "1") int page, @PathVariable("username") String username,
-                                    Model model) {
+                                          Model model) {
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("createDate").descending());
 
         Page<PostDto> userPosts = postService.getPublishedPostsByUser(pageable, username);
@@ -39,8 +39,8 @@ public class BlogController {
 
     @GetMapping("/{username}/{id}")
     public String getNthPublishedPostByUser(@PathVariable("username") String username,
-                                     @PathVariable("id") Integer id,
-                                     Model model) {
+                                            @PathVariable("id") Integer id,
+                                            Model model) {
         try {
             Pageable pageable = PageRequest.of(id - 1, 1, Sort.by("createDate"));
 
