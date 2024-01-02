@@ -3,6 +3,8 @@ package com.ll.medium.domain.medium.medium.controller;
 import com.ll.medium.domain.member.member.controller.MemberController;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
+import com.ll.medium.global.exception.CustomException;
+import com.ll.medium.global.exception.ErrorCode;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,7 +89,7 @@ public class MemberControllerTest {
         // GIVEN
         createAndSaveMember("existingUser", "11112222", "user@example.com");
 
-        // WHEN
+        // WHEN THEN
         ResultActions resultActions = mvc.perform(post("/member/join")
                 .with(csrf())
                 .param("username", "existingUser")
@@ -96,9 +98,19 @@ public class MemberControllerTest {
                 .param("email", "existinguser@example.com"));
 
         // THEN
+
         resultActions
-                .andExpect(view().name("domain/member/member/join"))
-                .andExpect(model().attribute("errorMsg", "해당 아이디는 이미 사용중입니다."));
+                .andExpect(view().name("global/js"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    if (!(result.getResolvedException() instanceof  CustomException)) {
+                        throw new AssertionError("Expected CustomException");   // 예상한 예외가 발생하지 않으면 테스트를 실패시킨다.
+                    }
+                    CustomException customException = (CustomException) result.getResolvedException();
+                    if (customException.getErrorCode() != ErrorCode.ALREADY_EXIST_USERNAME) {
+                        throw new AssertionError("Expected ErrorCode.ALREADY_EXIST_USERNAME");
+                    }
+                });
     }
 
     @Test   // GET /member/login
