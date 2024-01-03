@@ -1,9 +1,6 @@
 package com.ll.medium.global.initData;
 
-import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
-import com.ll.medium.domain.post.post.entity.Post;
-import com.ll.medium.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -11,17 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Random;
 
 @Configuration
 @RequiredArgsConstructor
 @Profile("!prod")
 public class NotProd {
-    private static final int TOTAL_MEMBERS = 100;
-    private static final int POSTS_PER_MEMBER = 2;
+    private static final int TOTAL_MEMBERS = 200;
 
     // 클래스 내부에서 메서드를 직접 호출할 경우 Spring의 프록시 기반 AOP가 적용되지 않는 문제가 발생.
     // AOP 프록시 기능 활성화를 위해 Self injection 사용하여 문제 해결
@@ -29,8 +22,9 @@ public class NotProd {
     @Lazy  // 순환 참조 방지
     private NotProd self;
     private final MemberService memberService;
-    private final PostService postService;
-    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DataInitService dataInitService;
 
     @Bean
     public ApplicationRunner initNotProd() {
@@ -43,40 +37,8 @@ public class NotProd {
 
     @Transactional
     public void generateTestData() {
-        Random random = new Random();
-
-        // Member 객체 생성
         for (int i = 1; i <= TOTAL_MEMBERS; i++) {
-            Member member = Member.builder()
-                    .username("user" + i)
-                    .password(passwordEncoder.encode("password" + i))
-                    .email("user" + i + "@example.com")
-                    .verified(true)
-                    .paid(i % 2 == 0)
-                    .build();
-            memberService.save(member);
-
-            // Post 객체 생성
-            for (int j = 0; j < POSTS_PER_MEMBER; j++) {
-                boolean postPaid = j % 2 == 0;
-
-                if (member.isPaid()) {
-                    postPaid = random.nextBoolean(); // 멤버십 회원인 경우 유료글 여부는 랜덤
-                } else {
-                    postPaid = false; // 멤버십 회원이 아니면 항상 일반글
-                }
-
-                int postNumber = (i - 1) * 2 + j + 1;
-                Post post = Post.builder()
-                        .title("Post Title " + postNumber)
-                        .body("Post Body " + postNumber)
-                        .published(random.nextBoolean())    // 공개글 여부는 랜덤
-                        .paid(postPaid)
-                        .author(member)
-                        .build();
-
-                postService.save(post);
-            }
+            dataInitService.createMemberAndPost(i);
         }
     }
 }
