@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     Page<Post> findAllByPublishedTrue(Pageable pageable);
 
     Page<Post> findAllByAuthor_Username(Pageable pageable, String author);
