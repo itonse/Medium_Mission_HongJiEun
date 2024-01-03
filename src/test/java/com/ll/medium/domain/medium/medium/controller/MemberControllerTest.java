@@ -171,7 +171,7 @@ public class MemberControllerTest {
         // THEN
         resultActions
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/member/login"));
+                .andExpect(redirectedUrl("/member/login?error"));
     }
 
     private void createAndSaveMember(String username, String password, String email) {
