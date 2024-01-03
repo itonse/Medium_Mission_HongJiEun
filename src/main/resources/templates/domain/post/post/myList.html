@@ -1,57 +1,59 @@
-<html layout:decorate="~{global/layout}">
+<div layout:decorate="~{global/layout}">
+    <div layout:fragment="content" class="p-2">
 
-<div layout:fragment="content" class="p-2">
+        <h2>내 글</h2>
 
-    <h2>내 글</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>글 번호</th>
+                <th>제목</th>
+                <th>작성일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="postDto : ${postDtoPage}">
+                <td th:text="${postDto.id}"></td>
+                <td>
+                    <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
+                </td>
+                <td th:text="${#temporals.format(postDto.createDate, 'yy.MM.dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-    <table>
-        <thead>
-        <tr>
-            <th>글 번호</th>
-            <th>제목</th>
-            <th>작성일시</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="postDto : ${postsDto}">
-            <td th:text="${postDto.id}"></td>
-            <td>
-                <a th:href="@{${postDto.id}}" th:text="${postDto.title}"></a>
-            </td>
-            <td th:text="${#temporals.format(postDto.createDate, 'yy.MM.dd HH:mm')}"></td>
-        </tr>
-        </tbody>
-    </table>
+        <div th:if="${!postDtoPage.isEmpty()}">
+            <ul style="display: flex; list-style: none; padding: 0; justify-content: center;">
+                <!-- 이전 페이지 링크 - 첫 페이지가 아닐 때만 표시 -->
+                <li th:if="${postDtoPage.number > 0}"
+                    th:classappend="${!postDtoPage.hasPrevious} ? 'disabled'"
+                    style="margin-right: 10px;">
+                    <a th:href="@{/post/myList(page=${postDtoPage.number}, size=10)}"
+                       style="text-decoration: none;">
+                        <span>이전</span>
+                    </a>
+                </li>
 
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-        <ul style="list-style: none; padding: 0; display: flex;">
-            <!-- 항상 첫 번째 페이지 링크를 표시 -->
-            <li>
-                <a th:href="@{/post/myList(page=1, size=10)}" th:text="1"
-                   th:class="${postsDto.number == 0 ? 'current-page' : ''}"
-                   style="margin-right: 8px;"></a>
-            </li>
+                <!-- 페이지 번호 링크 -->
+                <li th:each="page : ${#numbers.sequence(0, postDtoPage.totalPages-1)}"
+                    th:if="${page >= postDtoPage.number-3 and page <= postDtoPage.number+3}"
+                    style="margin-right: 10px;">
+                    <a th:text="${page + 1}"
+                       th:href="@{/post/myList(page=${page + 1}, size=10)}"
+                       th:class="${page == postDtoPage.number} ? 'active' : null">
+                    </a>
+                </li>
 
-            <!-- 총 페이지 수가 5개를 초과하고 현재 페이지가 첫 5개 페이지를 넘어설 경우, 줄임표(...) 표시 -->
-            <li th:if="${postsDto.totalPages > 5 and postsDto.number >= 5}">
-                <span>...</span>
-            </li>
-
-            <!-- 페이지 번호 링크 -->
-            <li th:each="pageNum : ${#numbers.sequence(2, postsDto.totalPages > 5 ? 5 : postsDto.totalPages)}" th:if="${postsDto.number < 5}">
-                <a th:href="@{/post/myList(page=${pageNum}, size=10)}" th:text="${pageNum}"
-                   th:class="${pageNum - 1 == postsDto.number ? 'current-page' : ''}"
-                   style="margin-right: 8px;"></a>
-            </li>
-
-            <!-- 총 페이지 수가 5개를 초과하는 경우, 줄임표와 마지막 페이지 링크 표시 -->
-            <li th:if="${postsDto.totalPages > 5}">
-                <span>...</span>
-                <a th:href="@{/post/myList(page=${postsDto.totalPages}, size=10)}" th:text="${postsDto.totalPages}"
-                   th:class="${postsDto.totalPages - 1 == postsDto.number ? 'current-page' : ''}"
-                   style="margin-right: 8px;"></a>
-            </li>
-        </ul>
+                <!-- 다음 페이지 링크 - 마지막 페이지가 아닐 때만 표시 -->
+                <li th:if="${postDtoPage.number < postDtoPage.totalPages - 1}"
+                    th:classappend="${!postDtoPage.hasNext} ? 'disabled'"
+                    style="margin-right: 10px;">
+                    <a th:href="@{/post/myList(page=${postDtoPage.number+2}, size=10)}"
+                       style="text-decoration: none;">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
-</html>

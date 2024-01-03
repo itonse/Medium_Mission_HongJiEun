@@ -32,9 +32,9 @@ public class BlogController {
         Page<PostDto> userPosts = postService.getPublishedPostsByUser(pageable, username);
 
         model.addAttribute("username", username);
-        model.addAttribute("postsDto", userPosts);
+        model.addAttribute("postDtoPage", userPosts);
 
-        return "blog_list";
+        return "domain/post/blog/blog_list";
     }
 
     @GetMapping("/{username}/{id}")

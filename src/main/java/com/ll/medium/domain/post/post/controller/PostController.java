@@ -32,7 +32,7 @@ public class PostController {
 
         Page<PostDto> publishedPosts = postService.getPublishedPosts(pageable);
 
-        model.addAttribute("postsDto", publishedPosts);
+        model.addAttribute("postDtoPage", publishedPosts);
 
         return "domain/post/post/list";
     }
@@ -49,7 +49,7 @@ public class PostController {
             throw new CustomException(MEMBER_POSTS_NOT_FOUND);
         } else {
 
-            model.addAttribute("postsDto", myPosts);
+            model.addAttribute("postDtoPage", myPosts);
 
             return "domain/post/post/myList";
         }
