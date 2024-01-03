@@ -113,4 +113,9 @@ public class PostService {
     public void delete(Long id) {
         postRepository.deleteById(id);
     }
+
+    @Transactional
+    public void save(Post post) {
+        postRepository.save(post);
+    }
 }

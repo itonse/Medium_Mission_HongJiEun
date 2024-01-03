@@ -26,8 +26,6 @@ public class MemberService {
         Member newMember = Member.builder()
                 .username(joinForm.getUsername())
                 .password(passwordEncoder.encode(joinForm.getPassword()))
-                .email(joinForm.getEmail())
-                .verified(false)
                 .build();
 
         memberRepository.save(newMember);
@@ -39,5 +37,14 @@ public class MemberService {
         if (memberRepository.existsByUsername(inputUsername)) {
             throw new CustomException(ALREADY_EXIST_USERNAME);
         }
+    }
+
+    public boolean existsByUsername(String username) {
+        return memberRepository.existsByUsername(username);
+    }
+
+    @Transactional
+    public void save(Member member) {
+        memberRepository.save(member);
     }
 }
