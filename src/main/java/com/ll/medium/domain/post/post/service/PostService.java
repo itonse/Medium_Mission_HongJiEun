@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.ll.medium.global.exception.ErrorCode.NOT_FOUND_POST;
@@ -117,5 +118,9 @@ public class PostService {
     @Transactional
     public void save(Post post) {
         postRepository.save(post);
+    }
+
+    public Page<PostDto> searchPosts(List<String> kwTypes, String kw, Pageable pageable) {
+        return postRepository.search(kwTypes, kw, pageable);
     }
 }

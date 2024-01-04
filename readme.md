@@ -45,3 +45,11 @@
 
 ### 필수미션 3 : 샘플 데이터 생성
 - [x] NotProd 에서 유료멤버십 회원(샘플 데이터)과 유료글(샘플 데이터)을 각각 100개 이상 생성
+
+### 선택미션 1 : 검색 필터링, 정렬
+
+- [x] 정렬 : id 최신순, 검색범위 : 제목
+  - GET /post/list?sortCode=idDesc&kwType=title&kw=검색어
+
+- [x] 정렬 : id 오래된순, 검색범위 : 내용
+  - GET /post/list?sortCode=hitAsc&kwType=body&kw=검색어

@@ -16,6 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import static com.ll.medium.global.exception.ErrorCode.*;
 
 @Controller
@@ -27,12 +31,30 @@ public class PostController {
     private final Rq rq;
 
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("createDate").descending());
+    public String list(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "idDesc", required = false) String sortCode,
+                       @RequestParam(required = false) String kwType,
+                       @RequestParam(required = false) String kw,
+                       Model model) {
 
-        Page<PostDto> publishedPosts = postService.getPublishedPosts(pageable);
+        Sort sort = customSort(sortCode);   // 사용자 정의 정렬 기준 생성
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+
+        // 키워드 타입을 리스트로 변환
+        List<String> kwTypes = Arrays.asList(Optional.ofNullable(kwType).orElse("").split(","));
+
+        Page<PostDto> publishedPosts;
+
+        if (kwTypes.isEmpty() || kw == null) {    // 검색어가 없거나 키워드 타입이 비어있는 경우 모든 게시물 조회
+            publishedPosts = postService.getPublishedPosts(pageable);
+        } else {    // 검색 조건이 있는 경우 검색 결과 조회
+            publishedPosts = postService.searchPosts(kwTypes, kw, pageable);
+        }
 
         model.addAttribute("postDtoPage", publishedPosts);
+        model.addAttribute("sortCode", sortCode);
+        model.addAttribute("kwType", kwType);
+        model.addAttribute("kw", kw);
 
         return "domain/post/post/list";
     }
@@ -123,5 +145,23 @@ public class PostController {
         postService.delete(id);
 
         return rq.redirect("/post/list", "글을 삭제하였습니다.");
+    }
+
+    public Sort customSort(String sortCode) {
+        Sort sort;
+
+        switch (sortCode) {
+            case "idDesc":
+                sort = Sort.by("id").descending();
+                break;
+            case "idAsc":
+                sort = Sort.by("id").ascending();
+                break;
+            default:   // 기본 정렬
+                sort = Sort.by("createDate").descending();
+                break;
+        }
+
+        return sort;
     }
 }
