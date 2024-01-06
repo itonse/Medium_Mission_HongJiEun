@@ -7,13 +7,24 @@
           onsubmit="submitWriteForm(this); return false;">
         <input type="hidden" name="_method" value="PUT"/>
 
-        <!-- 공개글 여부 -->
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text">공개글</span>
-                <input type="checkbox" name="published" class="toggle toggle-lg"
-                       th:checked="${postDto.published}">
-            </label>
+        <div style="display: flex;">
+            <!-- 공개글 여부 -->
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">공개글</span>
+                    <input type="checkbox" name="published" class="toggle toggle-lg"
+                           th:checked="${postDto.published}">
+                </label>
+            </div>
+
+            <!-- 유료글 여부 -->
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">유료글</span>
+                    <input type="checkbox" name="paid" class="toggle toggle-lg"
+                           th:checked="${postDto.paid}">
+                </label>
+            </div>
         </div>
 
         <!-- title 입력 필드 -->

@@ -74,6 +74,7 @@ public class PostControllerTest {
                         .param("title", "제목1")
                         .param("body", "내용1")
                         .param("published", "true")
+                        .param("paid", "true")
                 )
                 .andDo(print());
 

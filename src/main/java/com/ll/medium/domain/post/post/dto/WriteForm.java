@@ -12,4 +12,5 @@ public class WriteForm {
     @NotBlank
     private String body;
     private boolean published;
+    private boolean paid;
 }

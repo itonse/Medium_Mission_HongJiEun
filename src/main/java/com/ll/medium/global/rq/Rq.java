@@ -1,6 +1,6 @@
 package com.ll.medium.global.rq;
 
-import com.ll.medium.global.util.Ut;
+import com.ll.medium.global.exception.CustomException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -50,10 +50,9 @@ public class Rq {
     }
 
     // 예외 메시지와 함께 이전 페이지로 돌아가기
-    public String historyBack(Exception e) {
-        resp.setStatus(400);
-        String exceptionStr = Ut.exception.toString(e);
-        req.setAttribute("exceptionStr", exceptionStr);
+    public String historyBack(CustomException e) {
+        resp.setStatus(e.getErrorCode().getHttpStatus().value());   // 응답 상태코드 지정
+        req.setAttribute("exceptionStr", e.getErrorCode().getMessage());
 
         return "global/js";
     }
@@ -75,18 +74,9 @@ public class Rq {
     }
 
     /*
-    // Rs 객체의 상태코드에 따라 특정 경로로 리다이렉트 하거나 이전 페이지로 돌아간다
-    public String redirectOrBack(String path, RsData<?> rs) {
-        if (rs.isFail()) {
-            return historyBack(rs.getMsg());
-        } else {
-            return redirect(path, rs.getMsg());
-        }
-    }
-     */
-
     // HTTP 요청 속성을 설정
     public void setAttribute(String key, Object value) {
         req.setAttribute(key, value);
     }
+     */
 }

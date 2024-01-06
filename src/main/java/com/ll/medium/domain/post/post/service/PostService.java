@@ -6,17 +6,18 @@ import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.WriteForm;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
+import com.ll.medium.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.Optional;
+
+import static com.ll.medium.global.exception.ErrorCode.NOT_FOUND_POST;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,30 +26,32 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public Page<PostDto> getPublishedPosts() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+    public Page<PostDto> getPublishedPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAllByPublishedTrue(pageable);
 
         return PostDto.toDtoPage(posts);
     }
 
-    public Page<PostDto> getUserPosts(String author) {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+    public Page<PostDto> getPublishedPostsByUser(Pageable pageable, String author) {
+        Page<Post> posts = postRepository.findAllByAuthor_UsernameAndPublishedTrue(pageable, author);
+
+        return PostDto.toDtoPage(posts);
+    }
+
+    public Page<PostDto> getUserPosts(Pageable pageable, String author) {
         Page<Post> posts = postRepository.findAllByAuthor_Username(pageable, author);
 
         return PostDto.toDtoPage(posts);
     }
 
-    public Page<PostDto> getRecent30Posts() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+    public Page<PostDto> getRecent30Posts(Pageable pageable) {
         Page<Post> posts = postRepository.findTop30ByPublishedTrue(pageable);
 
         return PostDto.toDtoPage(posts);
     }
 
-    public PostDto getUserOrderedPost(String username, Integer order) {     // 특정 회원의 N번째 글 상세보기에 사용
-        Pageable pageable = PageRequest.of(order - 1, 1);
-        Page<Post> page = postRepository.findByAuthor_Username(username, pageable);
+    public PostDto getNthPublishedPostByUser(Pageable pageable, String username, Integer order) {     // 특정 회원의 N번째 글 상세보기에 사용
+        Page<Post> page = postRepository.findByAuthor_UsernameAndPublishedTrue(pageable, username);
 
         Optional<PostDto> postDtoOptional = page.stream()
                 .findFirst()
@@ -57,8 +60,7 @@ public class PostService {
         if (postDtoOptional.isPresent()) {
             return postDtoOptional.get();
         } else {
-            throw new NoSuchElementException("%s님의 %d번째 글은 존재하지 않습니다."
-                    .formatted("username", order));
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
@@ -72,6 +74,7 @@ public class PostService {
                     .title(writeForm.getTitle())
                     .body(writeForm.getBody())
                     .published(writeForm.isPublished())
+                    .paid(writeForm.isPaid())
                     .build();
 
             postRepository.save(post);
@@ -86,7 +89,7 @@ public class PostService {
 
             return PostDto.from(post);
         } else {
-            throw new NoSuchElementException("%d번 글이 존재하지 않습니다.".formatted(id));
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
@@ -96,14 +99,28 @@ public class PostService {
 
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            post.updatePost(writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
+            post.updatePost(
+                    writeForm.getTitle(),
+                    writeForm.getBody(),
+                    writeForm.isPublished(),
+                    writeForm.isPaid()
+            );
         } else {
-            throw new NoSuchElementException("해당 글은 존재하지 않습니다.");
+            throw new CustomException(NOT_FOUND_POST);
         }
     }
 
     @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void save(Post post) {
+        postRepository.save(post);
+    }
+
+    public Page<PostDto> searchPosts(List<String> kwTypes, String kw, Pageable pageable) {
+        return postRepository.search(kwTypes, kw, pageable);
     }
 }

@@ -3,10 +3,10 @@ package com.ll.medium.domain.member.member.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+@AllArgsConstructor
 @Getter
 public class JoinForm {
     @NotBlank(message = "아이디를 입력해주세요")

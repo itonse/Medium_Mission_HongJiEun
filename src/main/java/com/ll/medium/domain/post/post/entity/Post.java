@@ -1,34 +1,38 @@
 package com.ll.medium.domain.post.post.entity;
 
 import com.ll.medium.domain.member.member.entity.Member;
-import com.ll.medium.global.jpa.baseEntity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import com.ll.medium.global.jpa.BaseTimeEntity;
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.AuditOverride;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@SuperBuilder
-@AuditOverride(forClass = BaseEntity.class)
+@Builder
+@AuditOverride(forClass = BaseTimeEntity.class)
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 @ToString(callSuper = true)
-public class Post extends BaseEntity {
+public class Post extends BaseTimeEntity {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+
     private String title;
     private String body;
     private boolean published;
+    private boolean paid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Member author;
 
-    public void updatePost(String title, String body, boolean published) {
+    public void updatePost(String title, String body, boolean published, boolean paid) {
         this.title = title;
         this.body = body;
         this.published = published;
+        this.paid = paid;
     }
 }
