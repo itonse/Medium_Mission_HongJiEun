@@ -4,7 +4,7 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,15 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class DataInitService {
     private static final int POSTS_PER_MEMBER = 1;   // 한 멤버가 작성할 글의 수
 
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final MemberService memberService;
+    private final PostService postService;
+    private final PasswordEncoder passwordEncoder;
 
     @Async("threadPoolTaskExecutor")   // 비동기 실행을 위해 해당 이름의 스레드 풀 사용
     public void createMemberAndPost(int memberIndex) {
