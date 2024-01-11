@@ -23,8 +23,7 @@ public class NotProd {
     private NotProd self;
     private final MemberService memberService;
 
-    @Autowired
-    private DataInitService dataInitService;
+    private final DataInitService dataInitService;
 
     @Bean
     public ApplicationRunner initNotProd() {
